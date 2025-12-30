@@ -1,23 +1,41 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Nişancı Oyunu</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #222;
-      color: #fff;
-      text-align: center;
+    body{font-family:Arial, sans-serif;background:#222;color:#fff;text-align:center;margin:0}
+    .screen{display:none;padding:30px}
+    .active{display:block}
+    button{padding:14px 22px;font-size:18px;margin:10px;cursor:pointer}
+    #hud{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;margin:10px 0}
+    #gameArea{
+      width:min(900px, 95vw);
+      height:60vh;
+      min-height:380px;
+      margin:18px auto 0;
+      background:#111;
+      border:2px solid #444;
+      position:relative;
+      overflow:hidden;
+      border-radius:10px;
     }
-    .screen { display: none; margin-top: 50px; }
-    .active { display: block; }
-    button {
-      padding: 15px 25px;
-      font-size: 18px;
-      margin: 10px;
-      cursor: pointer;
+    .enemy{
+      position:absolute;
+      width:70px;height:70px;
+      border-radius:12px;
+      background:#b33;
+      display:flex;align-items:center;justify-content:center;
+      user-select:none;
+      font-size:34px;
+      box-shadow:0 6px 18px rgba(0,0,0,.35);
+      transform:scale(1);
+      transition:transform .08s ease;
     }
+    .enemy:active{transform:scale(0.95)}
+    .msg{margin-top:12px;font-size:18px;color:#7CFC00;min-height:24px}
+    .small{opacity:.85;font-size:14px}
   </style>
 </head>
 <body>
@@ -28,54 +46,208 @@
   <button onclick="selectWeapon('Tabanca')">🔫 Tabanca</button>
   <button onclick="selectWeapon('Tüfek')">🔥 Tüfek</button>
   <button onclick="selectWeapon('Sniper')">🎯 Sniper</button>
-  <p id="weaponMsg"></p>
+  <div id="weaponMsg" class="msg"></div>
+  <div class="small">Seçince “iyi seçim” mesajı gelir ve seviye seçimine geçer.</div>
 </div>
 
 <!-- SEVİYE SEÇİM -->
 <div id="levelScreen" class="screen">
   <h1>Seviye Seç</h1>
-  <button onclick="selectLevel('easy')">🟢 Kolay</button>
-  <button onclick="selectLevel('medium')">🟡 Orta</button>
-  <button onclick="selectLevel('hard')">🔴 Zor</button>
+  <button onclick="startGame('easy')">🟢 Kolay</button>
+  <button onclick="startGame('medium')">🟡 Orta</button>
+  <button onclick="startGame('hard')">🔴 Zor</button>
+  <div id="levelMsg" class="msg"></div>
 </div>
 
 <!-- OYUN -->
 <div id="gameScreen" class="screen">
-  <h1>Oyun Başladı</h1>
-  <p id="info"></p>
+  <h1>Oyun</h1>
+
+  <div id="hud">
+    <div>Silah: <b id="hudWeapon">-</b></div>
+    <div>Seviye: <b id="hudLevel">-</b></div>
+    <div>Adam: <b id="hudCount">0</b>/20</div>
+    <div>Vurulan: <b id="hudHit">0</b></div>
+    <div>Kaçan: <b id="hudMiss">0</b></div>
+    <div>Skor: <b id="hudScore">0</b></div>
+  </div>
+
+  <div id="gameArea"></div>
+
+  <div style="margin-top:16px;">
+    <button onclick="resetToMenu()">🔁 Menüye Dön</button>
+  </div>
+  <div class="small">İpucu: Adam çıkınca tıkla. Süresi dolarsa kaçar.</div>
+</div>
+
+<!-- OYUN BİTTİ -->
+<div id="endScreen" class="screen">
+  <h1>Oyun Bitti</h1>
+  <p>Skor: <b id="finalScore">0</b></p>
+  <p>Vurulan: <b id="finalHit">0</b> | Kaçan: <b id="finalMiss">0</b></p>
+  <button onclick="resetToMenu()">🔁 Tekrar Oyna</button>
 </div>
 
 <script>
-let weapon = "";
-let enemyTime = 0;
+  // ---------- DURUM ----------
+  let weapon = "";
+  let level = "";
+  let enemyVisibleMs = 5000;
 
-function selectWeapon(w) {
-  weapon = w;
-  document.getElementById("weaponMsg").innerText =
-    "✅ Güzel seçim: " + w;
+  const TOTAL_ENEMIES = 20;
 
-  setTimeout(() => {
-    showScreen("levelScreen");
-  }, 1000);
-}
+  let spawned = 0;
+  let hit = 0;
+  let miss = 0;
+  let score = 0;
 
-function selectLevel(level) {
-  if (level === "easy") enemyTime = 5000;
-  if (level === "medium") enemyTime = 3000;
-  if (level === "hard") enemyTime = 2000;
+  let currentEnemyTimeout = null;
+  let gameRunning = false;
 
-  document.getElementById("info").innerText =
-    "Silah: " + weapon +
-    " | Adam süresi: " + (enemyTime / 1000) + " sn";
+  // ---------- EKRAN ----------
+  function showScreen(id){
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
 
-  showScreen("gameScreen");
-}
+  // ---------- 1) SİLAH SEÇ ----------
+  function selectWeapon(w){
+    weapon = w;
+    document.getElementById("weaponMsg").textContent = "✅ İyi seçim! (" + w + ")";
+    setTimeout(() => {
+      document.getElementById("weaponMsg").textContent = "";
+      showScreen("levelScreen");
+    }, 900);
+  }
 
-function showScreen(id) {
-  document.querySelectorAll(".screen")
-    .forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
+  // ---------- 2) SEVİYE SEÇ + OYUNU BAŞLAT ----------
+  function startGame(lv){
+    level = lv;
+
+    if (lv === "easy") enemyVisibleMs = 5000;
+    if (lv === "medium") enemyVisibleMs = 3000;
+    if (lv === "hard") enemyVisibleMs = 2000;
+
+    document.getElementById("levelMsg").textContent =
+      "✅ Seviye seçildi! Başlıyoruz… (" + (enemyVisibleMs/1000) + " sn)";
+
+    setTimeout(() => {
+      document.getElementById("levelMsg").textContent = "";
+      initGame();
+    }, 700);
+  }
+
+  function initGame(){
+    // reset
+    spawned = 0; hit = 0; miss = 0; score = 0;
+    gameRunning = true;
+    clearTimeout(currentEnemyTimeout);
+
+    // hud
+    document.getElementById("hudWeapon").textContent = weapon || "-";
+    document.getElementById("hudLevel").textContent = levelLabel(level);
+    updateHud();
+
+    // temizle
+    document.getElementById("gameArea").innerHTML = "";
+
+    showScreen("gameScreen");
+    spawnNextEnemy();
+  }
+
+  function levelLabel(lv){
+    if(lv==="easy") return "Kolay";
+    if(lv==="medium") return "Orta";
+    if(lv==="hard") return "Zor";
+    return "-";
+  }
+
+  function updateHud(){
+    document.getElementById("hudCount").textContent = spawned;
+    document.getElementById("hudHit").textContent = hit;
+    document.getElementById("hudMiss").textContent = miss;
+    document.getElementById("hudScore").textContent = score;
+  }
+
+  // ---------- 3) 20 ADAM ÇIKAR ----------
+  function spawnNextEnemy(){
+    if(!gameRunning) return;
+
+    if (spawned >= TOTAL_ENEMIES){
+      endGame();
+      return;
+    }
+
+    spawned++;
+    updateHud();
+
+    const area = document.getElementById("gameArea");
+    area.innerHTML = ""; // aynı anda tek adam
+
+    const enemy = document.createElement("div");
+    enemy.className = "enemy";
+    enemy.textContent = "🧍";
+
+    // rastgele konum (kenarlardan pay bırak)
+    const pad = 10;
+    const maxX = area.clientWidth - 70 - pad;
+    const maxY = area.clientHeight - 70 - pad;
+    const x = pad + Math.floor(Math.random() * Math.max(1, maxX));
+    const y = pad + Math.floor(Math.random() * Math.max(1, maxY));
+    enemy.style.left = x + "px";
+    enemy.style.top  = y + "px";
+
+    // vurunca
+    enemy.onclick = () => {
+      if(!gameRunning) return;
+      clearTimeout(currentEnemyTimeout);
+      hit++;
+      score += weaponScore(weapon);
+      updateHud();
+
+      enemy.textContent = "💥";
+      enemy.style.background = "#2b8a3e";
+
+      setTimeout(() => spawnNextEnemy(), 180);
+    };
+
+    area.appendChild(enemy);
+
+    // süre dolarsa kaçar
+    currentEnemyTimeout = setTimeout(() => {
+      if(!gameRunning) return;
+      miss++;
+      updateHud();
+      area.innerHTML = ""; // adam kaybolur
+      setTimeout(() => spawnNextEnemy(), 120);
+    }, enemyVisibleMs);
+  }
+
+  function weaponScore(w){
+    // istersen değiştir: tüfek hızlı ama düşük, sniper yüksek
+    if (w === "Tabanca") return 10;
+    if (w === "Tüfek")   return 8;
+    if (w === "Sniper")  return 14;
+    return 10;
+  }
+
+  function endGame(){
+    gameRunning = false;
+    clearTimeout(currentEnemyTimeout);
+
+    document.getElementById("finalScore").textContent = score;
+    document.getElementById("finalHit").textContent = hit;
+    document.getElementById("finalMiss").textContent = miss;
+
+    showScreen("endScreen");
+  }
+
+  function resetToMenu(){
+    gameRunning = false;
+    clearTimeout(currentEnemyTimeout);
+    document.getElementById("gameArea").innerHTML = "";
+    showScreen("weaponScreen");
+  }
 </script>
 
 </body>
