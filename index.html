@@ -9,280 +9,153 @@
 body{
   margin:0;
   font-family:Arial;
-  background:radial-gradient(circle at top,#333,#000);
+  background:#111;
   color:#fff;
   text-align:center;
-  touch-action:manipulation;
 }
-.screen{display:none;padding:15px}
+.screen{display:none;padding:20px}
 .active{display:block}
-
 button{
-  padding:16px 26px;
-  margin:10px;
+  padding:14px 24px;
+  margin:8px;
   font-size:18px;
   border:none;
-  border-radius:14px;
-  background:linear-gradient(145deg,#ff9800,#ff5722);
+  border-radius:12px;
+  background:#ff5722;
   color:#fff;
 }
-
-#hud{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  max-width:900px;
-  margin:auto;
-  padding:10px;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-#hearts{font-size:24px;color:red}
-
 #gameArea{
-  width:95%;
-  max-width:900px;
-  height:60vh;
-  min-height:360px;
-  background:#111;
-  margin:10px auto;
-  border-radius:14px;
+  width:90%;
+  max-width:800px;
+  height:400px;
+  background:#000;
+  margin:15px auto;
   position:relative;
-  overflow:hidden;
 }
-
-/* DÜŞMANLAR */
 .enemy{
   position:absolute;
+  width:60px;
+  height:60px;
+  background:red;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:10px;
-  user-select:none;
+  cursor:pointer;
 }
-.normal{width:60px;height:60px;background:#e74c3c;font-size:30px}
-.fast{width:50px;height:50px;background:#f1c40f;font-size:26px}
-.tank{width:80px;height:80px;background:#3498db;font-size:34px}
-.boss{width:110px;height:110px;background:#8e44ad;font-size:40px}
-
-/* MERMİ */
-.bullet{
-  position:absolute;
-  height:4px;
-  background:yellow;
-  transform-origin:left center;
-  z-index:10;
-}
-
-.scoreboard{
+.scorebox{
   max-width:300px;
-  margin:10px auto;
-  background:#111;
-  border-radius:10px;
+  margin:auto;
+  background:#222;
   padding:10px;
-}
-.scoreboard li{
-  list-style:none;
-  padding:6px;
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SİLAH -->
-<div id="weaponScreen" class="screen active">
-  <h1>Silahını Seç</h1>
-  <button onclick="chooseWeapon('tabanca')">🔫 Tabanca</button>
-  <button onclick="chooseWeapon('tufek')">🔥 Tüfek</button>
-  <button onclick="chooseWeapon('sniper')">🎯 Sniper</button>
-</div>
-
-<!-- SEVİYE -->
-<div id="levelScreen" class="screen">
-  <h1>Seviye Seç</h1>
-  <button onclick="startGame(3000)">🟢 Kolay</button>
-  <button onclick="startGame(2000)">🟡 Orta</button>
-  <button onclick="startGame(1000)">🔴 Zor</button>
+<!-- İSİM -->
+<div id="nameScreen" class="screen active">
+  <h1>İsmini Gir</h1>
+  <input id="playerName" placeholder="İsmin" />
+  <br><br>
+  <button onclick="saveName()">Başla</button>
 </div>
 
 <!-- OYUN -->
 <div id="gameScreen" class="screen">
-  <div id="hud">
-    <div>Silah: <b id="weaponText"></b></div>
-    <div>Skor: <span id="score">0</span></div>
-    <div>Seri: <span id="combo">0</span></div>
-    <div id="hearts">❤️❤️❤️</div>
-  </div>
+  <h2>Skor: <span id="score">0</span></h2>
   <div id="gameArea"></div>
 </div>
 
 <!-- BİTİŞ -->
 <div id="endScreen" class="screen">
-  <h1>🎉 Ellerine Sağlık 🎉</h1>
+  <h1>Oyun Bitti</h1>
   <p>Skorun: <b id="finalScore"></b></p>
 
-  <h3>🏆 En İyi 3</h3>
-  <ul id="topScores" class="scoreboard"></ul>
+  <h3>🌍 Online Skor Tablosu</h3>
+  <ul id="onlineScores" class="scorebox"></ul>
 
-  <button onclick="resetGame()">🔁 Tekrar</button>
+  <button onclick="location.reload()">Tekrar</button>
 </div>
 
-<script>
-let weapon="", enemyTime=3000;
-let score=0, combo=0, lives=3, killed=0;
-let moveInterval, timeout, bossHp=0;
+<!-- 🔥 FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+<script>
+/* 🔴 BURAYI KENDİ FIREBASE BİLGİLERİNLE DEĞİŞTİR */
+const firebaseConfig = {
+  apiKey: "API_KEY",
+  authDomain: "PROJE.firebaseapp.com",
+  databaseURL: "https://PROJE-default-rtdb.firebaseio.com",
+  projectId: "PROJE",
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* OYUN */
+let score=0;
+let name="";
 const area=document.getElementById("gameArea");
-const scoreEl=document.getElementById("score");
-const comboEl=document.getElementById("combo");
-const heartsEl=document.getElementById("hearts");
-const weaponText=document.getElementById("weaponText");
-const topScoresEl=document.getElementById("topScores");
 
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-function chooseWeapon(w){
-  weapon=w;
-  weaponText.innerText=w.toUpperCase();
-  show("levelScreen");
-}
-
-function startGame(time){
-  enemyTime=time;
-  score=0; combo=0; lives=3; killed=0;
-  updateHud();
+function saveName(){
+  name=document.getElementById("playerName").value.trim();
+  if(!name){ alert("İsim gir"); return; }
   show("gameScreen");
   spawnEnemy();
 }
 
-function updateHud(){
-  scoreEl.innerText=score;
-  comboEl.innerText=combo;
-  heartsEl.innerText="❤️".repeat(lives);
-}
-
-function weaponDamage(){ return weapon==="sniper"?2:1; }
-
-function shootBullet(fromX, fromY, toX, toY){
-  const bullet=document.createElement("div");
-  bullet.className="bullet";
-  const dx=toX-fromX, dy=toY-fromY;
-  const dist=Math.hypot(dx,dy);
-  const angle=Math.atan2(dy,dx)*180/Math.PI;
-  bullet.style.width=dist+"px";
-  bullet.style.left=fromX+"px";
-  bullet.style.top=fromY+"px";
-  bullet.style.transform=`rotate(${angle}deg)`;
-  area.appendChild(bullet);
-  setTimeout(()=>bullet.remove(),80);
-}
-
 function spawnEnemy(){
-  if(lives<=0){ endGame(); return; }
   area.innerHTML="";
-
-  let enemy=document.createElement("div");
-  let speed=150, base=10;
-  let isBoss=(killed>0 && killed%10===0);
-
-  if(isBoss){
-    enemy.className="enemy boss";
-    enemy.innerText="👑";
-    bossHp=3;
-    base=50;
-    speed=220;
-  }else{
-    const types=[
-      {cls:"normal",icon:"🧍",speed:160,base:10},
-      {cls:"fast",icon:"🏃",speed:90,base:15},
-      {cls:"tank",icon:"🛡️",speed:220,base:20}
-    ];
-    const t=types[Math.floor(Math.random()*types.length)];
-    enemy.className="enemy "+t.cls;
-    enemy.innerText=t.icon;
-    speed=t.speed;
-    base=t.base;
-  }
-
-  let x=Math.random()*(area.clientWidth-enemy.offsetWidth);
-  let y=Math.random()*(area.clientHeight-enemy.offsetHeight);
-  enemy.style.left=x+"px";
-  enemy.style.top=y+"px";
-
-  enemy.addEventListener("pointerdown",(e)=>{
-    const rect=enemy.getBoundingClientRect();
-    const aRect=area.getBoundingClientRect();
-    shootBullet(area.clientWidth/2, area.clientHeight,
-      rect.left-aRect.left+rect.width/2,
-      rect.top-aRect.top+rect.height/2);
-
-    let bonus=0;
-    if(e.clientY-rect.top<rect.height*0.35) bonus+=15;
-    combo++; if(combo===8) bonus+=20;
-
-    if(isBoss){
-      bossHp-=weaponDamage();
-      if(bossHp>0) return;
-    }
-
-    score+=base+bonus;
-    killed++;
-    updateHud();
-    clearInterval(moveInterval);
-    clearTimeout(timeout);
+  const e=document.createElement("div");
+  e.className="enemy";
+  e.innerText="🧍";
+  e.style.left=Math.random()*340+"px";
+  e.style.top=Math.random()*300+"px";
+  e.onclick=()=>{
+    score+=10;
+    document.getElementById("score").innerText=score;
     spawnEnemy();
-  });
+  };
+  area.appendChild(e);
 
-  area.appendChild(enemy);
-
-  moveInterval=setInterval(()=>{
-    x+=Math.random()*30-15;
-    y+=Math.random()*30-15;
-    x=Math.max(0,Math.min(area.clientWidth-enemy.offsetWidth,x));
-    y=Math.max(0,Math.min(area.clientHeight-enemy.offsetHeight,y));
-    enemy.style.left=x+"px";
-    enemy.style.top=y+"px";
-  },speed);
-
-  timeout=setTimeout(()=>{
-    lives--; combo=0;
-    updateHud();
-    clearInterval(moveInterval);
-    spawnEnemy();
-  },enemyTime);
+  setTimeout(()=>{
+    endGame();
+  },10000);
 }
 
 function endGame(){
-  saveScore(score);
-  document.getElementById("finalScore").innerText=score;
-  renderTopScores();
   show("endScreen");
+  document.getElementById("finalScore").innerText=score;
+  saveOnlineScore();
 }
 
-function resetGame(){ show("weaponScreen"); }
-
-/* 🏆 SKOR TABLOSU */
-function saveScore(newScore){
-  let scores=JSON.parse(localStorage.getItem("topScores")||"[]");
-  scores.push(newScore);
-  scores.sort((a,b)=>b-a);
-  scores=scores.slice(0,3);
-  localStorage.setItem("topScores",JSON.stringify(scores));
+function saveOnlineScore(){
+  db.ref("scores").push({
+    name:name,
+    score:score
+  });
+  loadScores();
 }
 
-function renderTopScores(){
-  let scores=JSON.parse(localStorage.getItem("topScores")||"[]");
-  topScoresEl.innerHTML="";
-  const medals=["🥇","🥈","🥉"];
-  scores.forEach((s,i)=>{
-    const li=document.createElement("li");
-    li.innerText=`${medals[i]} ${s}`;
-    topScoresEl.appendChild(li);
+function loadScores(){
+  db.ref("scores").orderByChild("score").limitToLast(10)
+  .on("value",snap=>{
+    const list=document.getElementById("onlineScores");
+    list.innerHTML="";
+    const arr=[];
+    snap.forEach(s=>arr.push(s.val()));
+    arr.reverse().forEach(s=>{
+      const li=document.createElement("li");
+      li.innerText=`${s.name} - ${s.score}`;
+      list.appendChild(li);
+    });
   });
 }
 </script>
