@@ -35,10 +35,7 @@ button{
   padding:10px;
 }
 
-#hearts{
-  font-size:26px;
-  color:red;
-}
+#hearts{font-size:26px;color:red}
 
 #gameArea{
   width:90%;
@@ -51,7 +48,6 @@ button{
   overflow:hidden;
 }
 
-/* Düşman tipleri */
 .enemy{
   position:absolute;
   display:flex;
@@ -64,6 +60,7 @@ button{
 .normal{width:60px;height:60px;background:#e74c3c;font-size:30px}
 .fast{width:50px;height:50px;background:#f1c40f;font-size:26px}
 .tank{width:80px;height:80px;background:#3498db;font-size:34px}
+.boss{width:110px;height:110px;background:#8e44ad;font-size:40px}
 </style>
 </head>
 
@@ -76,7 +73,9 @@ button{
 <!-- SİLAH -->
 <div id="weaponScreen" class="screen active">
   <h1>Silahını Seç</h1>
-  <button onclick="selectWeapon()">🔫 Başla</button>
+  <button onclick="selectWeapon('tabanca')">🔫 Tabanca</button>
+  <button onclick="selectWeapon('tufek')">🔥 Tüfek</button>
+  <button onclick="selectWeapon('sniper')">🎯 Sniper</button>
 </div>
 
 <!-- SEVİYE -->
@@ -92,6 +91,7 @@ button{
   <div id="hud">
     <div>Skor: <span id="score">0</span></div>
     <div>Seri: <span id="combo">0</span></div>
+    <div>Silah: <span id="weaponText"></span></div>
     <div>Rekor: <span id="highScore">0</span></div>
     <div id="hearts">❤️❤️❤️</div>
   </div>
@@ -111,11 +111,15 @@ let enemyTime=3000;
 let score=0, combo=0, lives=3;
 let moveInterval, timeout;
 let highScore=localStorage.getItem("highScore")||0;
+let weapon="tabanca";
+let killed=0;
+let bossHp=0;
 
 const scoreEl=document.getElementById("score");
 const comboEl=document.getElementById("combo");
 const heartsEl=document.getElementById("hearts");
 const highScoreEl=document.getElementById("highScore");
+const weaponText=document.getElementById("weaponText");
 
 highScoreEl.innerText=highScore;
 
@@ -124,6 +128,124 @@ function show(id){
   document.getElementById(id).classList.add('active');
 }
 
-function selectWeapon(){ show("levelScreen"); }
+function selectWeapon(w){
+  weapon=w;
+  weaponText.innerText=w.toUpperCase();
+  show("levelScreen");
+}
 
-functio
+function startGame(time){
+  enemyTime=time;
+  score=0; combo=0; lives=3; killed=0;
+  updateHud();
+  show("gameScreen");
+  spawnEnemy();
+}
+
+function updateHud(){
+  scoreEl.innerText=score;
+  comboEl.innerText=combo;
+  heartsEl.innerText="❤️".repeat(lives);
+  highScoreEl.innerText=highScore;
+}
+
+function weaponDamage(){
+  if(weapon==="tabanca") return 1;
+  if(weapon==="tufek") return 1;
+  if(weapon==="sniper") return 2;
+  return 1;
+}
+
+function spawnEnemy(){
+  if(lives<=0){ endGame(); return; }
+
+  const area=document.getElementById("gameArea");
+  area.innerHTML="";
+
+  let isBoss = (killed>0 && killed%10===0);
+  let enemy=document.createElement("div");
+  let speed=150, base=10;
+
+  if(isBoss){
+    enemy.className="enemy boss";
+    enemy.innerText="👑";
+    bossHp=3;
+    base=50;
+    speed=220;
+  }else{
+    const types=[
+      {cls:"normal",icon:"🧍",speed:160,base:10},
+      {cls:"fast",icon:"🏃",speed:90,base:15},
+      {cls:"tank",icon:"🛡️",speed:220,base:20}
+    ];
+    const t=types[Math.floor(Math.random()*types.length)];
+    enemy.className="enemy "+t.cls;
+    enemy.innerText=t.icon;
+    speed=t.speed;
+    base=t.base;
+  }
+
+  let x=Math.random()*(area.clientWidth-enemy.offsetWidth);
+  let y=Math.random()*(area.clientHeight-enemy.offsetHeight);
+  enemy.style.left=x+"px";
+  enemy.style.top=y+"px";
+
+  enemy.onclick=(e)=>{
+    document.getElementById("shotSound").currentTime=0;
+    document.getElementById("shotSound").play().catch(()=>{});
+
+    let bonus=0;
+    const rect=enemy.getBoundingClientRect();
+    if(e.clientY-rect.top < rect.height*0.35) bonus+=15;
+
+    combo++;
+    if(combo===8) bonus+=20;
+
+    if(isBoss){
+      bossHp-=weaponDamage();
+      if(bossHp>0) return;
+    }
+
+    score+=base+bonus;
+    killed++;
+    updateHud();
+    clearInterval(moveInterval);
+    clearTimeout(timeout);
+    spawnEnemy();
+  };
+
+  area.appendChild(enemy);
+
+  moveInterval=setInterval(()=>{
+    x+=Math.random()*30-15;
+    y+=Math.random()*30-15;
+    x=Math.max(0,Math.min(area.clientWidth-enemy.offsetWidth,x));
+    y=Math.max(0,Math.min(area.clientHeight-enemy.offsetHeight,y));
+    enemy.style.left=x+"px";
+    enemy.style.top=y+"px";
+  },speed);
+
+  timeout=setTimeout(()=>{
+    lives--;
+    combo=0;
+    updateHud();
+    clearInterval(moveInterval);
+    spawnEnemy();
+  },enemyTime);
+}
+
+function endGame(){
+  if(score>highScore){
+    highScore=score;
+    localStorage.setItem("highScore",highScore);
+  }
+  document.getElementById("finalScore").innerText=score;
+  document.getElementById("finalHigh").innerText=highScore;
+  show("endScreen");
+}
+
+function resetGame(){ show("weaponScreen"); }
+</script>
+
+</body>
+</html>
