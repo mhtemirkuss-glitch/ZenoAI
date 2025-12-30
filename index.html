@@ -12,11 +12,11 @@ body{
   color:#fff;
   text-align:center;
 }
-.screen{display:none;padding:30px}
+.screen{display:none;padding:20px}
 .active{display:block}
 
 button{
-  padding:15px 25px;
+  padding:14px 24px;
   margin:10px;
   font-size:18px;
   border:none;
@@ -26,12 +26,26 @@ button{
   cursor:pointer;
 }
 
+#hud{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:900px;
+  margin:0 auto;
+  padding:10px;
+}
+
+#hearts{
+  font-size:26px;
+  color:red;
+}
+
 #gameArea{
   width:90%;
   max-width:900px;
   height:400px;
   background:#111;
-  margin:20px auto;
+  margin:15px auto;
   border-radius:12px;
   position:relative;
   overflow:hidden;
@@ -58,6 +72,7 @@ button{
   <source src="https://actions.google.com/sounds/v1/impacts/crash.ogg">
 </audio>
 
+<!-- SİLAH -->
 <div id="weaponScreen" class="screen active">
   <h1>Silahını Seç</h1>
   <button onclick="selectWeapon('Tabanca')">🔫 Tabanca</button>
@@ -65,44 +80,70 @@ button{
   <button onclick="selectWeapon('Sniper')">🎯 Sniper</button>
 </div>
 
+<!-- SEVİYE -->
 <div id="levelScreen" class="screen">
   <h1>Seviye Seç</h1>
-  <button onclick="startGame(5000)">Kolay</button>
-  <button onclick="startGame(3000)">Orta</button>
-  <button onclick="startGame(2000)">Zor</button>
+  <button onclick="startGame(3000)">🟢 Kolay</button>
+  <button onclick="startGame(2000)">🟡 Orta</button>
+  <button onclick="startGame(1000)">🔴 Zor</button>
 </div>
 
+<!-- OYUN -->
 <div id="gameScreen" class="screen">
-  <h2>Skor: <span id="score">0</span></h2>
+  <div id="hud">
+    <div>Skor: <span id="score">0</span></div>
+    <div>Rekor: <span id="highScore">0</span></div>
+    <div id="hearts">❤️❤️❤️</div>
+  </div>
   <div id="gameArea"></div>
 </div>
 
+<!-- BİTİŞ -->
+<div id="endScreen" class="screen">
+  <h1>Oyun Bitti</h1>
+  <p>Skor: <b id="finalScore"></b></p>
+  <p>Rekor: <b id="finalHigh"></b></p>
+  <button onclick="resetGame()">🔁 Tekrar Oyna</button>
+</div>
+
 <script>
-let weapon="";
 let enemyTime=3000;
 let score=0;
-let moveInterval;
-let timeout;
+let lives=3;
+let moveInterval, timeout;
+let highScore=localStorage.getItem("highScore")||0;
+
+document.getElementById("highScore").innerText=highScore;
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function selectWeapon(w){
-  weapon=w;
+function selectWeapon(){
   show("levelScreen");
 }
 
 function startGame(time){
   enemyTime=time;
   score=0;
-  document.getElementById("score").innerText=0;
+  lives=3;
+  updateHud();
   show("gameScreen");
   spawnEnemy();
 }
 
+function updateHud(){
+  scoreEl.innerText=score;
+  hearts.innerText="❤️".repeat(lives);
+}
+
+const scoreEl=document.getElementById("score");
+const hearts=document.getElementById("hearts");
+
 function spawnEnemy(){
+  if(lives<=0){endGame();return;}
+
   const area=document.getElementById("gameArea");
   area.innerHTML="";
   const enemy=document.createElement("div");
@@ -114,13 +155,11 @@ function spawnEnemy(){
   enemy.style.left=x+"px";
   enemy.style.top=y+"px";
 
-  // 🔊 SES (GARANTİ)
   enemy.onclick=()=>{
-    const sound=document.getElementById("shotSound");
-    sound.currentTime=0;
-    sound.play().catch(()=>{});
+    document.getElementById("shotSound").currentTime=0;
+    document.getElementById("shotSound").play().catch(()=>{});
     score+=10;
-    document.getElementById("score").innerText=score;
+    updateHud();
     clearInterval(moveInterval);
     clearTimeout(timeout);
     spawnEnemy();
@@ -128,10 +167,9 @@ function spawnEnemy(){
 
   area.appendChild(enemy);
 
-  // 🏃 HAREKET (JS)
   moveInterval=setInterval(()=>{
-    x+=Math.random()*20-10;
-    y+=Math.random()*20-10;
+    x+=Math.random()*30-15;
+    y+=Math.random()*30-15;
     x=Math.max(0,Math.min(area.clientWidth-60,x));
     y=Math.max(0,Math.min(area.clientHeight-60,y));
     enemy.style.left=x+"px";
@@ -139,9 +177,25 @@ function spawnEnemy(){
   },150);
 
   timeout=setTimeout(()=>{
+    lives--;
+    updateHud();
     clearInterval(moveInterval);
     spawnEnemy();
   },enemyTime);
+}
+
+function endGame(){
+  if(score>highScore){
+    highScore=score;
+    localStorage.setItem("highScore",highScore);
+  }
+  finalScore.innerText=score;
+  finalHigh.innerText=highScore;
+  show("endScreen");
+}
+
+function resetGame(){
+  show("weaponScreen");
 }
 </script>
 
