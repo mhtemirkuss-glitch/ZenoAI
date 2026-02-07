@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Emir AI</title>
+  <title>Mehmet Emir AI</title>
   <style>
     :root{
       --bg:#343541; --panel:#40414f; --panel2:#202123;
@@ -19,10 +19,42 @@
       display:flex;align-items:center;justify-content:space-between;gap:10px
     }
     .brand{display:flex;align-items:center;gap:10px}
-    .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--green),#7aa7ff);
-      display:grid;place-items:center;color:#07110a;font-weight:900}
-    .brand b{display:block;font-size:14px}
-    .brand small{display:block;color:var(--muted);font-size:12px}
+    .logoBox{
+      width:38px;height:38px;border-radius:12px;
+      background: linear-gradient(135deg, var(--green), #7aa7ff, #b36bff);
+      background-size: 220% 220%;
+      animation: glowMove 6s linear infinite;
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+      flex:0 0 auto;
+    }
+    .logoBox span{
+      font-weight:1000; letter-spacing:.5px;
+      color:#07110a; font-size:14px;
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+    @keyframes glowMove{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    .brandTitle{
+      display:flex; flex-direction:column; line-height:1.1;
+    }
+    .brandTitle b{
+      font-size:14px;
+      background: linear-gradient(90deg,#e7e7ff,#8ad0ff,#e7e7ff);
+      background-size: 200% 100%;
+      -webkit-background-clip:text;
+      color:transparent;
+      animation: titleShine 5s linear infinite;
+    }
+    @keyframes titleShine{
+      0%{background-position:0%}
+      100%{background-position:200%}
+    }
+    .brandTitle small{color:var(--muted);font-size:12px}
     .tools{display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--text);
@@ -75,10 +107,10 @@
 <body>
   <div class="top">
     <div class="brand">
-      <div class="logo">AI</div>
-      <div>
-        <b id="brandTitle">Emir AI</b>
-        <small id="brandSub">7. sınıf + günlük hayat • offline (API’siz)</small>
+      <div class="logoBox" title="Mehmet Emir AI"><span>AI</span></div>
+      <div class="brandTitle">
+        <b id="brandTitle">Mehmet Emir AI</b>
+        <small id="brandSub">GPT görünümü • yazıyor animasyonu • offline</small>
       </div>
     </div>
     <div class="tools">
@@ -94,18 +126,18 @@
 
   <div class="composer">
     <div class="inner">
-      <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "osmanlının 2. padişahı nasıl öldü", "cumhuriyet ne zaman ilan edildi", "3 km kaç m")'></textarea>
+      <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "osmanlının 17. padişahı nasıl öldü", "cumhuriyet ne zaman ilan edildi", "12 bölü 3")'></textarea>
       <button class="send" id="send">Gönder</button>
     </div>
     <div class="hintbar">
       <span class="chip" data-q="Benim adım Mehmet">Benim adım…</span>
+      <span class="chip" data-q="7. sınıf konular">7. sınıf konular</span>
       <span class="chip" data-q="Konu anlat: Karışımlar">Konu anlat</span>
       <span class="chip" data-q="test: karışımlar">Test</span>
-      <span class="chip" data-q="osmanlının 7. padişahı kim">Osmanlı kaçıncı</span>
-      <span class="chip" data-q="osmanlının 17. padişahı nasıl öldü">Osmanlı ölüm</span>
+      <span class="chip" data-q="osmanlının 3. padişahı nasıl öldü">Osmanlı ölüm</span>
       <span class="chip" data-q="cumhuriyet ne zaman ilan edildi">Cumhuriyet</span>
+      <span class="chip" data-q="3 km kaç m">Birim çeviri</span>
       <span class="chip" data-q="12 bölü 3">Hesap</span>
-      <span class="chip" data-q="saat kaç">Saat</span>
     </div>
   </div>
 
@@ -118,11 +150,11 @@
   };
 
   const state = {
-    name: store.get("ea_name",""),
-    title: store.get("ea_title","Emir AI"),
-    chat: store.get("ea_chat", []),
-    lastTopic: store.get("ea_lastTopic",""),
-    test: store.get("ea_test", null) // {key, i, score}
+    name: store.get("mea_name",""),
+    title: "Mehmet Emir AI",
+    chat: store.get("mea_chat", []),
+    lastTopic: store.get("mea_lastTopic",""),
+    test: store.get("mea_test", null) // {key, i, score}
   };
 
   const $ = (id)=>document.getElementById(id);
@@ -131,6 +163,7 @@
   const sendBtn = $("send");
 
   $("brandTitle").textContent = state.title;
+  document.title = state.title;
 
   const now = () => new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
   const today = () => new Date().toLocaleDateString("tr-TR",{weekday:"long", year:"numeric", month:"long", day:"numeric"});
@@ -167,9 +200,10 @@
     chatEl.scrollTop = chatEl.scrollHeight;
 
     state.chat.push({who, text, t: Date.now()});
-    store.set("ea_chat", state.chat.slice(-220));
+    store.set("mea_chat", state.chat.slice(-250));
   }
 
+  // ---------- Typing animation ----------
   function typingOn(){
     const row = document.createElement("div");
     row.className = "row";
@@ -181,70 +215,73 @@
 
     const bub = document.createElement("div");
     bub.className = "bubble";
-    bub.innerHTML = `<span class="typing">Yazıyor <span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`;
+    bub.innerHTML = `<span class="typing">${state.title} yazıyor <span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`;
 
     row.appendChild(av);
     row.appendChild(bub);
     chatEl.appendChild(row);
     chatEl.scrollTop = chatEl.scrollHeight;
   }
-  function typingOff(){ const t = document.getElementById("typingRow"); if(t) t.remove(); }
+  function typingOff(){
+    const t = document.getElementById("typingRow");
+    if(t) t.remove();
+  }
 
   function autoResize(){
     inp.style.height = "0px";
     inp.style.height = Math.min(inp.scrollHeight, 160) + "px";
   }
 
-  // ---------- Knowledge: 7. Sınıf (konu haritası) ----------
+  // ---------- 7. Sınıf (konu haritası) ----------
   const GRADE7 = {
     "Fen Bilimleri": [
-      ["Güneş Sistemi ve Ötesi", "Gezegenler, tutulmalar, uzay teknolojileri, yıldızlar-galaksiler."],
-      ["Hücre ve Bölünmeler", "Hücre yapısı, mitoz-mayoz, büyüme-onarım, üreme."],
-      ["Kuvvet ve Enerji", "İş-güç-enerji, sürtünme, enerji dönüşümleri."],
-      ["Saf Maddeler ve Karışımlar", "Element-bileşik, çözelti, ayırma yöntemleri."],
-      ["Işığın Madde ile Etkileşimi", "Yansıma-kırılma, mercekler, renkler."],
-      ["Elektrik Devreleri", "Seri-paralel devre, ampul parlaklığı, devre elemanları."]
+      ["Güneş Sistemi ve Ötesi","Gezegenler, tutulmalar, uzay teknolojileri, yıldızlar-galaksiler."],
+      ["Hücre ve Bölünmeler","Hücre yapısı, mitoz-mayoz, büyüme-onarım, üreme."],
+      ["Kuvvet ve Enerji","İş-güç-enerji, sürtünme, enerji dönüşümleri."],
+      ["Saf Maddeler ve Karışımlar","Element-bileşik, çözelti, ayırma yöntemleri."],
+      ["Işığın Madde ile Etkileşimi","Yansıma-kırılma, mercekler, renkler."],
+      ["Elektrik Devreleri","Seri-paralel devre, ampul parlaklığı, devre elemanları."]
     ],
     "Matematik": [
-      ["Tam Sayılar", "İşaret kuralları, mutlak değer, işlemler, problemler."],
-      ["Rasyonel Sayılar", "Kesir-ondalık, karşılaştırma, işlemler."],
-      ["Oran-Orantı", "Doğru/ters orantı, problemler."],
-      ["Yüzdeler", "İndirim-zam, yüzde hesapları."],
-      ["Cebirsel İfadeler", "Terim-katsayı, parantez, sadeleştirme."],
-      ["Denklemler", "Basit denklemler, problem çözme."],
-      ["Doğrular-Açılar", "Temel geometrik ilişkiler."],
-      ["Çokgenler", "Üçgen-dörtgen özellikleri (temel)."],
-      ["Veri Analizi", "Tablo-grafik, yorumlama."]
+      ["Tam Sayılar","İşaret kuralları, mutlak değer, işlemler."],
+      ["Rasyonel Sayılar","Kesir-ondalık, karşılaştırma, işlemler."],
+      ["Oran-Orantı","Doğru/ters orantı, problemler."],
+      ["Yüzdeler","İndirim-zam, yüzde hesapları."],
+      ["Cebirsel İfadeler","Terim-katsayı, parantez, sadeleştirme."],
+      ["Denklemler","Basit denklemler, problem çözme."],
+      ["Doğrular-Açılar","Temel geometrik ilişkiler."],
+      ["Çokgenler","Üçgen-dörtgen özellikleri (temel)."],
+      ["Veri Analizi","Tablo-grafik, yorumlama."]
     ],
     "Türkçe": [
-      ["Paragraf", "Ana fikir, yardımcı fikir, konu, başlık."],
-      ["Sözcükte Anlam", "Gerçek/mecaz/terim, deyim-atasözü."],
-      ["Cümlede Anlam", "Neden-sonuç, amaç-sonuç, koşul, çıkarım."],
-      ["Yazım Kuralları", "Büyük harfler, birleşik kelimeler, sayıların yazımı."],
-      ["Noktalama", "Virgül, nokta, iki nokta, kesme, tırnak vb."],
-      ["Fiilimsiler", "İsim-fiil, sıfat-fiil, zarf-fiil (temel)."],
-      ["Söz Sanatları", "Benzetme, kişileştirme, abartma, konuşturma."]
+      ["Paragraf","Ana fikir, yardımcı fikir, konu, başlık."],
+      ["Sözcükte Anlam","Gerçek/mecaz/terim, deyim-atasözü."],
+      ["Cümlede Anlam","Neden-sonuç, amaç-sonuç, koşul, çıkarım."],
+      ["Yazım Kuralları","Büyük harfler, birleşik kelimeler, sayıların yazımı."],
+      ["Noktalama","Virgül, nokta, iki nokta, kesme, tırnak vb."],
+      ["Fiilimsiler","İsim-fiil, sıfat-fiil, zarf-fiil (temel)."],
+      ["Söz Sanatları","Benzetme, kişileştirme, abartma, konuşturma."]
     ],
     "Sosyal Bilgiler": [
-      ["Birey ve Toplum", "Hak-sorumluluk, iletişim, empati."],
-      ["Kültür ve Miras", "Türk-İslam ve Osmanlı kültürü, miras."],
-      ["İnsanlar ve Çevre", "Nüfus, göç, yerleşme, iklim (temel)."],
-      ["Bilim-Teknoloji-Toplum", "Teknolojinin etkileri, etik."],
-      ["Üretim-Dağıtım-Tüketim", "Kaynaklar, ekonomi, bilinçli tüketim."],
-      ["Etkin Vatandaşlık", "Demokrasi, katılım, yönetim (temel)."]
+      ["Birey ve Toplum","Hak-sorumluluk, iletişim, empati."],
+      ["Kültür ve Miras","Türk-İslam ve Osmanlı kültürü, miras."],
+      ["İnsanlar ve Çevre","Nüfus, göç, yerleşme, iklim (temel)."],
+      ["Bilim-Teknoloji-Toplum","Teknolojinin etkileri, etik."],
+      ["Üretim-Dağıtım-Tüketim","Kaynaklar, ekonomi, bilinçli tüketim."],
+      ["Etkin Vatandaşlık","Demokrasi, katılım, yönetim (temel)."]
     ],
     "Din Kültürü": [
-      ["İbadet ve Dua", "İbadetin anlamı, dua, ahlak ilişkisi."],
-      ["Ahlak", "Güzel davranışlar, sorumluluk, kul hakkı."],
-      ["Hz. Muhammed’in Örnekliği", "Doğruluk, güven, merhamet (genel)."],
-      ["İslam’da Bilgi", "Bilginin önemi, doğru kaynak, sorumluluk (genel)."]
+      ["İbadet ve Dua","İbadetin anlamı, dua, ahlak ilişkisi."],
+      ["Ahlak","Güzel davranışlar, sorumluluk, kul hakkı."],
+      ["Hz. Muhammed’in Örnekliği","Doğruluk, güven, merhamet (genel)."],
+      ["İslam’da Bilgi","Bilginin önemi, doğru kaynak, sorumluluk (genel)."]
     ],
     "İngilizce": [
-      ["Daily Routines", "Simple Present, saatler, rutinler."],
-      ["Likes / Dislikes", "Seviyorum-sevmiyorum, tercih bildirme."],
-      ["Descriptions", "People/places, sıfatlar."],
-      ["Past Simple (temel)", "Dün ne yaptın? (basic)."],
-      ["Shopping / Numbers", "Fiyat, sayı, basit diyalog."]
+      ["Daily Routines","Simple Present, saatler, rutinler."],
+      ["Likes / Dislikes","Tercih bildirme."],
+      ["Descriptions","People/places, sıfatlar."],
+      ["Past Simple (temel)","Dün ne yaptın? (basic)."],
+      ["Shopping / Numbers","Fiyat, sayı, basit diyalog."]
     ]
   };
 
@@ -257,59 +294,36 @@
     return out.trim();
   }
 
-  // ---------- Knowledge: Cumhuriyet ----------
+  // ---------- Cumhuriyet ----------
   const REPUBLIC = {
-    proclamation: "Türkiye Cumhuriyeti, TBMM’de 29 Ekim 1923’te yapılan anayasa değişikliğiyle ilan edildi; Mustafa Kemal Atatürk ilk cumhurbaşkanı seçildi.",
-    republicDay: "29 Ekim Cumhuriyet Bayramı her yıl 29 Ekim’de kutlanır (kutlamalar 28 Ekim öğleden sonra başlayabilir)."
+    proclamation: "Türkiye Cumhuriyeti 29 Ekim 1923’te ilan edildi; Mustafa Kemal Atatürk ilk cumhurbaşkanı seçildi.",
+    republicDay: "29 Ekim Cumhuriyet Bayramı her yıl 29 Ekim’de kutlanır."
   };
 
-  // ---------- Knowledge: Osmanlı (kaçıncı + ölüm notu) ----------
-  // Kaynak olarak listede açıkça belirtilen notlar (killed/murdered/strangled/executed/died in exile vb.) kullanıldı.
-  // Diğerleri için: "saltanatı ölümüne kadar sürdü" gibi genel not verilir. :contentReference[oaicite:2]{index=2}
+  // ---------- Osmanlı (kaçıncı + ölüm notu) ----------
   const OTTOMAN = [
-    {n:1, name:"Osman Gazi", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:2, name:"Orhan Gazi", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:3, name:"I. Murad (Hüdavendigâr)", deathNote:"Kosova Savaşı (1389) sonrası öldürüldü/şehit edildi (savaş meydanı)."},
-    {n:4, name:"Yıldırım Bayezid", deathNote:"Ankara Savaşı’nda esir düştü; Akşehir’de esarette öldü (1403)."},
-    {n:5, name:"I. Mehmed (Çelebi)", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:6, name:"II. Murad", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:7, name:"II. Mehmed (Fatih)", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:8, name:"II. Bayezid", deathNote:"Tahttan indirildi; Dimetoka yakınlarında öldü (1512)."},
-    {n:9, name:"I. Selim (Yavuz)", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:10, name:"I. Süleyman (Kanuni)", deathNote:"Szigetvar Kuşatması sırasında otağında öldü (1566)."},
-    {n:11, name:"II. Selim", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:12, name:"III. Murad", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:13, name:"III. Mehmed", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:14, name:"I. Ahmed", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:15, name:"I. Mustafa", deathNote:"İkinci saltanatı sonrası sarayda tutuldu; İstanbul’da öldü (1639)."},
-    {n:16, name:"II. Osman (Genç Osman)", deathNote:"Yeniçeri isyanıyla tahttan indirildi; öldürüldü (1622)."},
-    {n:17, name:"IV. Murad", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:18, name:"I. İbrahim", deathNote:"Tahttan indirildi; İstanbul’da boğduruldu (1648)."},
-    {n:19, name:"IV. Mehmed", deathNote:"Tahttan indirildi (1687); Edirne’de öldü (1693)."},
-    {n:20, name:"II. Süleyman", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:21, name:"II. Ahmed", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:22, name:"II. Mustafa", deathNote:"Edirne Vakası sonrası tahttan indirildi; İstanbul’da öldü (1704)."},
-    {n:23, name:"III. Ahmed", deathNote:"Patrona Halil isyanı sonrası tahttan indirildi; öldü (1736)."},
-    {n:24, name:"I. Mahmud", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:25, name:"III. Osman", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:26, name:"III. Mustafa", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:27, name:"I. Abdülhamid", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:28, name:"III. Selim", deathNote:"Tahttan indirildi; İstanbul’da öldürüldü (1808)."},
-    {n:29, name:"IV. Mustafa", deathNote:"Tahttan indirildi; İstanbul’da idam edildi (1808)."},
-    {n:30, name:"II. Mahmud", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:31, name:"Abdülmecid", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:32, name:"Abdülaziz", deathNote:"Tahttan indirildi; 5 gün sonra ölü bulundu (intihar/öldürülme tartışmalı)."},
-    {n:33, name:"V. Murad", deathNote:"Sağlık nedeniyle indirildi; Çırağan Sarayı’nda öldü (1904)."},
-    {n:34, name:"II. Abdülhamid", deathNote:"Tahttan indirildi; Beylerbeyi Sarayı’nda öldü (1918)."},
-    {n:35, name:"V. Mehmed (Reşad)", deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:36, name:"VI. Mehmed (Vahdeddin)", deathNote:"Saltanat kaldırıldı; sürgünde (Sanremo, İtalya) öldü (1926)."}
+    {n:1,name:"Osman Gazi",deathNote:"Saltanatı ölümüne kadar sürdü."},
+    {n:2,name:"Orhan Gazi",deathNote:"Saltanatı ölümüne kadar sürdü."},
+    {n:3,name:"I. Murad (Hüdavendigâr)",deathNote:"Kosova Savaşı (1389) sonrası öldürüldü/şehit edildi."},
+    {n:4,name:"Yıldırım Bayezid",deathNote:"Esir düştü; esarette öldü (1403)."},
+    {n:5,name:"I. Mehmed (Çelebi)",deathNote:"Saltanatı ölümüne kadar sürdü."},
+    {n:6,name:"II. Murad",deathNote:"Saltanatı ölümüne kadar sürdü."},
+    {n:7,name:"II. Mehmed (Fatih)",deathNote:"Saltanatı ölümüne kadar sürdü."},
+    {n:8,name:"II. Bayezid",deathNote:"Tahttan indirildi; öldü (1512)."},
+    {n:9,name:"I. Selim (Yavuz)",deathNote:"Saltanatı ölümüne kadar sürdü."},
+    {n:10,name:"I. Süleyman (Kanuni)",deathNote:"Sefer sırasında öldü (1566)."},
+    {n:16,name:"II. Osman (Genç Osman)",deathNote:"İsyanla tahttan indirildi; öldürüldü (1622)."},
+    {n:18,name:"I. İbrahim",deathNote:"Tahttan indirildi; boğduruldu (1648)."},
+    {n:28,name:"III. Selim",deathNote:"Tahttan indirildi; öldürüldü (1808)."},
+    {n:29,name:"IV. Mustafa",deathNote:"Tahttan indirildi; idam edildi (1808)."},
+    {n:36,name:"VI. Mehmed (Vahdeddin)",deathNote:"Saltanat kaldırıldı; sürgünde öldü (1926)."}
   ];
 
-  function findOttomanByOrdinal(textN){
-    const m = textN.match(/(\d{1,2})\s*\.?\s*padi/);
+  function findOttomanByOrdinal(t){
+    const m = t.match(/(\d{1,2})\s*\.?\s*padi/);
     if(!m) return null;
     const n = parseInt(m[1],10);
-    return OTTOMAN.find(x=>x.n===n) || null;
+    return OTTOMAN.find(x=>x.n===n) || {n, name:"(Bu numara için detay listende yok)", deathNote:"İstersen ben listeyi büyüteyim."};
   }
 
   // ---------- Mini tests ----------
@@ -333,7 +347,6 @@
     const t = norm(raw);
     if(!t.startsWith("test:")) return null;
     const key = norm(t.split("test:")[1] || "").trim();
-
     let k=null;
     if(key.includes("karisim")) k="karisimlar";
     else if(key.includes("elektrik")) k="elektrik";
@@ -341,7 +354,7 @@
     else return "Bu test yok. Deneyin: test: karışımlar / elektrik / osmanlı";
 
     state.test = {key:k, i:0, score:0};
-    store.set("ea_test", state.test);
+    store.set("mea_test", state.test);
 
     const q = MINI_TESTS[k][0];
     return `Mini test başladı (${key}).\nSoru 1: ${q.q}\nA) ${q.a[0]}\nB) ${q.a[1]}\nC) ${q.a[2]}\nCevap: A/B/C`;
@@ -351,7 +364,7 @@
     if(!state.test) return null;
     const t = norm(raw);
     if(t === "test iptal" || t === "iptal"){
-      state.test=null; store.set("ea_test", state.test);
+      state.test=null; store.set("mea_test", state.test);
       return "Test modunu kapattım ✅";
     }
     const a = raw.trim().toUpperCase();
@@ -368,34 +381,13 @@
     state.test.i++;
     if(state.test.i >= bank.length){
       out += `\nTest bitti! Skor: ${state.test.score}/${bank.length}\nYeni test: "test: karışımlar / elektrik / osmanlı"`;
-      state.test=null; store.set("ea_test", state.test);
+      state.test=null; store.set("mea_test", state.test);
       return out.trim();
     }
-    store.set("ea_test", state.test);
+    store.set("mea_test", state.test);
     const nq = bank[state.test.i];
     out += `Soru ${state.test.i+1}: ${nq.q}\nA) ${nq.a[0]}\nB) ${nq.a[1]}\nC) ${nq.a[2]}\nCevap: A/B/C`;
     return out.trim();
-  }
-
-  // ---------- “Günlük en sık sorular” (offline FAQ seti) ----------
-  function dailyFAQ(textN){
-    // Basit yönlendirme/cevaplar (offline)
-    if(textN.includes("saat kac") || textN.includes("saat kaç")) return `Şu an saat: ${new Date().toLocaleTimeString("tr-TR")}`;
-    if(textN.includes("bugun") && (textN.includes("gun") || textN.includes("tarih"))) return `Bugün: ${today()}`;
-    if(textN.includes("nasilsin") || textN.includes("nasi gidiyor")) return "İyiyim 🙂 Sen nasılsın?";
-    if(textN.includes("ne yapayim") || textN.includes("ne yapalim")){
-      return "3 hızlı öneri:\n1) 10 dk tekrar: \"Konu anlat: ...\"\n2) Mini test: \"test: ...\"\n3) Bir hedef yaz: Bugün tek iş = (…)\nHangisini seçtin?";
-    }
-    if(textN.includes("ozetle") || textN.includes("özetle")){
-      return "Neyi özetleyeyim? Metni buraya yapıştır veya konu başlığını yaz.";
-    }
-    if(textN.includes("mail") || textN.includes("e posta") || textN.includes("eposta")){
-      return "E-posta yazdırmak için: Kime + konu + amaç + ton (resmi/samimi) yaz, ben taslak çıkarayım.";
-    }
-    if(textN.includes("cv") || textN.includes("özgeçmiş")){
-      return "CV için: eğitim + iş deneyimi + beceriler + hedef pozisyon yaz, düzenleyeyim.";
-    }
-    return null;
   }
 
   // ---------- Math / conversions ----------
@@ -417,15 +409,14 @@
     }catch{ return null; }
   }
 
-  function unitConvert(textN){
-    // km->m, m->cm, kg->g, l->ml
-    const m1 = textN.match(/(\d+(?:\.\d+)?)\s*km\s*(kac|kaç)?\s*m/);
+  function unitConvert(t){
+    const m1 = t.match(/(\d+(?:\.\d+)?)\s*km\s*(kac|kaç)?\s*m/);
     if(m1) return `${m1[1]} km = ${Number(m1[1])*1000} m`;
-    const m2 = textN.match(/(\d+(?:\.\d+)?)\s*m\s*(kac|kaç)?\s*cm/);
+    const m2 = t.match(/(\d+(?:\.\d+)?)\s*m\s*(kac|kaç)?\s*cm/);
     if(m2) return `${m2[1]} m = ${Number(m2[1])*100} cm`;
-    const m3 = textN.match(/(\d+(?:\.\d+)?)\s*kg\s*(kac|kaç)?\s*g/);
+    const m3 = t.match(/(\d+(?:\.\d+)?)\s*kg\s*(kac|kaç)?\s*g/);
     if(m3) return `${m3[1]} kg = ${Number(m3[1])*1000} g`;
-    const m4 = textN.match(/(\d+(?:\.\d+)?)\s*l\s*(kac|kaç)?\s*ml/);
+    const m4 = t.match(/(\d+(?:\.\d+)?)\s*l\s*(kac|kaç)?\s*ml/);
     if(m4) return `${m4[1]} L = ${Number(m4[1])*1000} mL`;
     return null;
   }
@@ -438,9 +429,8 @@
 
     if(t.startsWith("konu anlat:")){
       const topic = norm(raw.split(":")[1] || "").trim();
-      state.lastTopic = topic; store.set("ea_lastTopic", state.lastTopic);
+      state.lastTopic = topic; store.set("mea_lastTopic", state.lastTopic);
 
-      // basit eşleştirme
       if(topic.includes("elektrik")){
         return `Elektrik Devreleri (özet):
 • Devre elemanları: pil, ampul, anahtar, kablo.
@@ -458,7 +448,7 @@
       }
       if(topic.includes("mitoz") || topic.includes("mayoz") || topic.includes("bolunme") || topic.includes("bölünme")){
         return `Hücre Bölünmeleri (özet):
-• Mitoz: 1→2 aynı hücre, büyüme-onarım, kromozom sayısı korunur.
+• Mitoz: 1→2 aynı hücre, büyüme-onarım, kromozom sayısı değişmez.
 • Mayoz: 1→4 farklı hücre, üreme, kromozom sayısı yarıya iner.`;
       }
 
@@ -490,135 +480,139 @@ Ayırma:
     return null;
   }
 
-  // ---------- Ottoman answers ----------
-  function answerOttoman(raw){
-    const t = norm(raw);
-    if(!(t.includes("osmanli") || t.includes("osmanlı"))) return null;
-
-    if(t.includes("tum") || t.includes("hepsi") || t.includes("liste")){
-      return "Osmanlı padişahları (1→36):\n" + OTTOMAN.map(x=>`${x.n}) ${x.name}`).join("\n");
-    }
-
-    const ord = findOttomanByOrdinal(t);
-    if(ord){
-      if(t.includes("nasil oldu") || t.includes("nasıl öldü") || t.includes("oldu") || t.includes("öldü")){
-        return `Osmanlı'nın ${ord.n}. padişahı: ${ord.name}\nÖlüm notu: ${ord.deathNote}`;
-      }
-      return `Osmanlı'nın ${ord.n}. padişahı: ${ord.name}`;
-    }
-
-    return "Osmanlı için örnek:\n• \"osmanlının 7. padişahı kim\"\n• \"osmanlının 3. padişahı nasıl öldü\"\n• \"osmanlının tüm padişahları\"";
-  }
-
-  // ---------- Cumhuriyet answers ----------
-  function answerRepublic(t){
-    if(t.includes("cumhuriyet") && (t.includes("ne zaman") || t.includes("ilan"))){
-      return REPUBLIC.proclamation + "\n\nCumhuriyet Bayramı: " + REPUBLIC.republicDay;
-    }
-    if(t.includes("29 ekim")){
-      return REPUBLIC.republicDay + "\n" + "Cumhuriyetin ilanı: 29 Ekim 1923.";
+  // ---------- Daily FAQ ----------
+  function dailyFAQ(t){
+    if(t.includes("saat kac") || t.includes("saat kaç")) return `Şu an saat: ${new Date().toLocaleTimeString("tr-TR")}`;
+    if(t.includes("bugun") && (t.includes("gun") || t.includes("tarih"))) return `Bugün: ${today()}`;
+    if(t.includes("nasilsin") || t.includes("nasi gidiyor")) return "İyiyim 🙂 Sen nasılsın?";
+    if(t.includes("ne yapayim") || t.includes("ne yapalim")){
+      return "3 hızlı öneri:\n1) 10 dk tekrar: \"Konu anlat: ...\"\n2) Mini test: \"test: ...\"\n3) Bir hedef yaz: Bugün tek iş = (…)\nHangisini seçtin?";
     }
     return null;
   }
 
-  // ---------- Name ----------
+  // ---------- Name capture ----------
   function setNameFromText(raw){
     const m = raw.match(/benim ad[ıi]m\s+(.+)/i);
     if(!m || !m[1]) return null;
     state.name = m[1].trim().replace(/[.!?]/g,"");
-    store.set("ea_name", state.name);
+    store.set("mea_name", state.name);
     return `Tamam ${state.name} 😎 İsmini kaydettim.`;
   }
 
   // ---------- Help ----------
   function helpText(){
     return `Komutlar:
-• ${"`Benim adım ...`"} → isim kaydeder
-• ${"`7. sınıf konular`"} → tüm ders konu haritası
-• ${"`Konu anlat: ...`"} / ${"`... detay`"} → konu anlatım
-• ${"`test: karışımlar / elektrik / osmanlı`"} → mini test
-• ${"`osmanlının 7. padişahı kim`"} / ${"`... nasıl öldü`"} → tarih
-• ${"`cumhuriyet ne zaman ilan edildi`"} → Cumhuriyet bilgisi
-• Hesap: ${"`12 bölü 3`"} / ${"`7*8`"} / ${"`(10+2)/3`"}
-• Birim: ${"`3 km kaç m`"} / ${"`2 kg kaç g`"} / ${"`1.5 L kaç ml`"}`;
+• "Benim adım ..." → isim kaydeder
+• "7. sınıf konular" → tüm ders konu haritası
+• "Konu anlat: ..." / "... detay" → konu anlatım
+• "test: karışımlar / elektrik / osmanlı" → mini test
+• "osmanlının 3. padişahı nasıl öldü" → Osmanlı
+• "cumhuriyet ne zaman ilan edildi" → Cumhuriyet
+• Hesap: "12 bölü 3" / "7*8"
+• Birim: "3 km kaç m" / "2 kg kaç g"`;
   }
 
   // ---------- Smart answer ----------
   function smartAnswer(raw){
     const t = norm(raw);
 
+    // isim
     const nameAns = setNameFromText(raw);
     if(nameAns) return nameAns;
 
+    // test
     const testAns = answerTest(raw);
     if(testAns) return testAns;
 
     const testStart = startTest(raw);
     if(testStart) return testStart;
 
-    const ott = answerOttoman(raw);
-    if(ott) return ott;
+    // osmanlı
+    if(t.includes("osmanli") || t.includes("osmanlı")){
+      if(t.includes("tum") || t.includes("hepsi") || t.includes("liste")){
+        return "Osmanlı padişah örnek listesi (bazı):\n" + OTTOMAN.map(x=>`${x.n}) ${x.name}`).join("\n") +
+          "\n\nÖrnek: \"osmanlının 16. padişahı nasıl öldü\"";
+      }
+      const ord = findOttomanByOrdinal(t);
+      if(t.includes("nasil oldu") || t.includes("nasıl öldü") || t.includes("öldü")){
+        return `Osmanlı'nın ${ord.n}. padişahı: ${ord.name}\nÖlüm notu: ${ord.deathNote}`;
+      }
+      return `Osmanlı'nın ${ord.n}. padişahı: ${ord.name}`;
+    }
 
-    const rep = answerRepublic(t);
-    if(rep) return rep;
+    // cumhuriyet
+    if(t.includes("cumhuriyet")){
+      if(t.includes("ne zaman") || t.includes("ilan")) return REPUBLIC.proclamation + "\n" + REPUBLIC.republicDay;
+      return REPUBLIC.republicDay;
+    }
 
+    // konu anlat
     const topic = explainTopic(raw);
     if(topic) return topic;
 
+    // birim
     const conv = unitConvert(t);
     if(conv) return conv;
 
+    // matematik
     const math = tryMath(raw);
     if(math) return math;
 
+    // günlük
     const faq = dailyFAQ(t);
     if(faq) return faq;
 
-    // küçük “zekileştirme”: ders kelimelerini yakala
-    if(t.includes("mitoz")) return "Mitoz: büyüme-onarım; 1 hücre → 2 aynı hücre; kromozom sayısı değişmez.";
-    if(t.includes("mayoz")) return "Mayoz: üreme ana hücrelerinde; 1 hücre → 4 farklı hücre; kromozom sayısı yarıya iner.";
-    if(t.includes("yuzde") || t.includes("yüzde")) return "Yüzde için örnek yaz: \"120’nin %20’si\" gibi. Ben hesaplayayım.";
-    if(t.includes("paragraf") || t.includes("ana fikir")) return "Paragrafta ana fikir genelde yazarın vermek istediği mesajdır. Metni yapıştır, ana fikri bulayım.";
-
     // fallback
     const nick = state.name ? state.name : "kanka";
-    return `Anladım ${nick}. Bunu iki şekilde çözebiliriz:
-1) Ders: "Konu anlat: ..." yaz
-2) Günlük/hesap: soruyu net yaz (örn: "3 km kaç m", "cumhuriyet ne zaman ilan edildi")
-İstersen sorunu aynen tekrar yaz, ben doğru kategoriye sokayım.`;
+    return `Anladım ${nick}. Şöyle deneyelim:
+• Ders: "Konu anlat: ..." yaz
+• Test: "test: karışımlar / elektrik / osmanlı"
+• Hesap: "12 bölü 3" gibi
+Sorunu biraz daha net yazarsan daha iyi yakalarım.`;
   }
 
-  // ---------- UI actions ----------
+  // ---------- Restore ----------
   function restore(){
     chatEl.innerHTML = "";
-    for(const m of state.chat.slice(-90)){
-      addRow(m.who, m.text);
+    const last = state.chat.slice(-120);
+    for(const m of last){
+      // yeniden çiz (kaydetmeden)
+      const row = document.createElement("div");
+      row.className = "row";
+      const av = document.createElement("div");
+      av.className = "avatar " + (m.who==="me" ? "me":"bot");
+      av.textContent = m.who==="me" ? "S" : "AI";
+      const bub = document.createElement("div");
+      bub.className = "bubble";
+      bub.textContent = m.text;
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = (m.who==="me" ? "Sen" : state.title) + " • " + new Date(m.t).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+      bub.appendChild(meta);
+      row.appendChild(av);
+      row.appendChild(bub);
+      chatEl.appendChild(row);
     }
-    // restore() addRow zaten kayda tekrar yazar; bunu önlemek için:
-    state.chat = store.get("ea_chat", []);
-    store.set("ea_chat", state.chat);
+    chatEl.scrollTop = chatEl.scrollHeight;
 
     if(state.chat.length === 0){
       addRow("bot",
 `Selam! Ben ${state.title} 😎
-• 7. sınıf konu anlatım + test
-• Osmanlı: kaçıncı padişah + (listede geçen) ölüm notu
-• Cumhuriyet: temel bilgiler
-• Günlük: saat/tarih/hesap/birim dönüşüm
-
-Denemek için:
-- "Benim adım Mehmet"
-- "7. sınıf konular"
-- "Konu anlat: Karışımlar"
-- "test: osmanlı"
-- "osmanlının 3. padişahı nasıl öldü"
-- "cumhuriyet ne zaman ilan edildi"`);
+• GPT görünümü + yazıyor animasyonu var.
+• 7. sınıf konu haritası: "7. sınıf konular"
+• Konu anlatım: "Konu anlat: Karışımlar"
+• Test: "test: karışımlar"
+• Osmanlı: "osmanlının 3. padişahı nasıl öldü"
+• Cumhuriyet: "cumhuriyet ne zaman ilan edildi"`);
     }
   }
 
+  // ---------- Send ----------
   function send(){
     const text = inp.value.trim();
     if(!text) return;
+
     inp.value = ""; autoResize();
     sendBtn.disabled = true;
 
@@ -630,23 +624,24 @@ Denemek için:
       addRow("bot", smartAnswer(text));
       sendBtn.disabled = false;
       inp.focus();
-    }, 260);
+    }, 320);
   }
 
+  // ---------- Buttons ----------
   $("btnHelp").onclick = () => addRow("bot", helpText());
   $("btnTopics").onclick = () => addRow("bot", listTopics());
-  $("btnOtt").onclick = () => addRow("bot", "Osmanlı hızlı komutlar:\n• \"osmanlının tüm padişahları\"\n• \"osmanlının 7. padişahı kim\"\n• \"osmanlının 17. padişahı nasıl öldü\"");
+  $("btnOtt").onclick = () => addRow("bot", "Osmanlı komutları:\n• \"osmanlının 3. padişahı nasıl öldü\"\n• \"osmanlının tüm padişahları\" (örnek liste)\n• \"osmanlının 28. padişahı kim\"");
   $("btnClear").onclick = () => {
     if(!confirm("Sohbeti temizleyeyim mi?")) return;
     state.chat = [];
-    store.set("ea_chat", state.chat);
+    store.set("mea_chat", state.chat);
     restore();
   };
   $("btnName").onclick = () => {
     const n = prompt("Adın ne? (Örn: Mehmet)", state.name || "");
     if(n === null) return;
     state.name = (n||"").trim();
-    store.set("ea_name", state.name);
+    store.set("mea_name", state.name);
     addRow("bot", state.name ? `Tamam ${state.name} 🙂` : "İsim temizlendi.");
   };
 
