@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mehmet Emir AI</title>
+
   <style>
     :root{
       --bg:#343541; --panel:#40414f; --panel2:#202123;
@@ -39,9 +40,7 @@
       50%{background-position:100% 50%}
       100%{background-position:0% 50%}
     }
-    .brandTitle{
-      display:flex; flex-direction:column; line-height:1.1;
-    }
+    .brandTitle{display:flex;flex-direction:column;line-height:1.1}
     .brandTitle b{
       font-size:14px;
       background: linear-gradient(90deg,#e7e7ff,#8ad0ff,#e7e7ff);
@@ -55,6 +54,7 @@
       100%{background-position:200%}
     }
     .brandTitle small{color:var(--muted);font-size:12px}
+
     .tools{display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--text);
@@ -62,6 +62,7 @@
     }
     .btn:hover{background:rgba(255,255,255,.10)}
     .btn.green{border-color:rgba(25,195,125,.55); background:rgba(25,195,125,.12)}
+
     .wrap{max-width:980px;margin:0 auto}
     .chat{padding:16px 14px 130px; min-height:calc(100vh - 56px)}
     .row{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -74,6 +75,7 @@
     .avatar.bot{background:rgba(109,70,255,.14);border-color:rgba(109,70,255,.35)}
     .bubble{flex:1;white-space:pre-wrap;word-break:break-word;line-height:1.55;font-size:15px}
     .meta{margin-top:6px;font-size:12px;color:rgba(197,197,210,.85);font-family:var(--mono)}
+
     .composer{
       position:fixed;left:0;right:0;bottom:0;
       background:linear-gradient(180deg, rgba(52,53,65,0), rgba(52,53,65,.95) 35%, rgba(52,53,65,1));
@@ -93,24 +95,26 @@
       padding:10px 14px;font-weight:900;cursor:pointer;min-width:90px
     }
     .send:disabled{opacity:.55;cursor:not-allowed}
+
     .hintbar{max-width:980px;margin:10px auto 0;display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px}
     .chip{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:999px;padding:7px 10px;cursor:pointer;user-select:none}
     .chip:hover{background:rgba(255,255,255,.10)}
+
     .typing{display:inline-flex;gap:6px;align-items:center;color:rgba(236,236,241,.9);font-size:14px}
     .dot{width:6px;height:6px;border-radius:999px;background:rgba(236,236,241,.75);animation:bounce 1s infinite}
     .dot:nth-child(2){animation-delay:.12s}
     .dot:nth-child(3){animation-delay:.24s}
     @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.6}40%{transform:translateY(-5px);opacity:1}}
-    .kbd{font-family:var(--mono);padding:1px 7px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.22)}
   </style>
 </head>
+
 <body>
   <div class="top">
     <div class="brand">
       <div class="logoBox" title="Mehmet Emir AI"><span>AI</span></div>
       <div class="brandTitle">
         <b id="brandTitle">Mehmet Emir AI</b>
-        <small id="brandSub">GPT görünümü • yazıyor animasyonu • offline</small>
+        <small id="brandSub">GPT görünümü • yazıyor animasyonu • offline + Google link</small>
       </div>
     </div>
     <div class="tools">
@@ -122,11 +126,13 @@
     </div>
   </div>
 
-  <div class="wrap"><div class="chat" id="chat"></div></div>
+  <div class="wrap">
+    <div class="chat" id="chat"></div>
+  </div>
 
   <div class="composer">
     <div class="inner">
-      <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "osmanlının 17. padişahı nasıl öldü", "cumhuriyet ne zaman ilan edildi", "12 bölü 3")'></textarea>
+      <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "osmanlının 3. padişahı nasıl öldü", "cumhuriyet ne zaman ilan edildi", "12 bölü 3")'></textarea>
       <button class="send" id="send">Gönder</button>
     </div>
     <div class="hintbar">
@@ -134,10 +140,11 @@
       <span class="chip" data-q="7. sınıf konular">7. sınıf konular</span>
       <span class="chip" data-q="Konu anlat: Karışımlar">Konu anlat</span>
       <span class="chip" data-q="test: karışımlar">Test</span>
-      <span class="chip" data-q="osmanlının 3. padişahı nasıl öldü">Osmanlı ölüm</span>
+      <span class="chip" data-q="osmanlının 16. padişahı nasıl öldü">Osmanlı ölüm</span>
       <span class="chip" data-q="cumhuriyet ne zaman ilan edildi">Cumhuriyet</span>
       <span class="chip" data-q="3 km kaç m">Birim çeviri</span>
       <span class="chip" data-q="12 bölü 3">Hesap</span>
+      <span class="chip" data-q="telefonum neden yavaş">Bilmiyorsa Google</span>
     </div>
   </div>
 
@@ -232,7 +239,13 @@
     inp.style.height = Math.min(inp.scrollHeight, 160) + "px";
   }
 
-  // ---------- 7. Sınıf (konu haritası) ----------
+  // ---------- Google fallback ----------
+  function googleLinkFor(question) {
+    const q = encodeURIComponent((question || "").trim());
+    return `Bunu Google’da arayabilirsin 👇\nhttps://www.google.com/search?q=${q}`;
+  }
+
+  // ---------- 7. Sınıf konu haritası ----------
   const GRADE7 = {
     "Fen Bilimleri": [
       ["Güneş Sistemi ve Ötesi","Gezegenler, tutulmalar, uzay teknolojileri, yıldızlar-galaksiler."],
@@ -300,17 +313,14 @@
     republicDay: "29 Ekim Cumhuriyet Bayramı her yıl 29 Ekim’de kutlanır."
   };
 
-  // ---------- Osmanlı (kaçıncı + ölüm notu) ----------
+  // ---------- Osmanlı (örnek + ölüm notu) ----------
+  // (Offline olduğu için özet liste: en çok sorulan kritik olanlar + örnekler)
   const OTTOMAN = [
     {n:1,name:"Osman Gazi",deathNote:"Saltanatı ölümüne kadar sürdü."},
     {n:2,name:"Orhan Gazi",deathNote:"Saltanatı ölümüne kadar sürdü."},
     {n:3,name:"I. Murad (Hüdavendigâr)",deathNote:"Kosova Savaşı (1389) sonrası öldürüldü/şehit edildi."},
     {n:4,name:"Yıldırım Bayezid",deathNote:"Esir düştü; esarette öldü (1403)."},
-    {n:5,name:"I. Mehmed (Çelebi)",deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:6,name:"II. Murad",deathNote:"Saltanatı ölümüne kadar sürdü."},
     {n:7,name:"II. Mehmed (Fatih)",deathNote:"Saltanatı ölümüne kadar sürdü."},
-    {n:8,name:"II. Bayezid",deathNote:"Tahttan indirildi; öldü (1512)."},
-    {n:9,name:"I. Selim (Yavuz)",deathNote:"Saltanatı ölümüne kadar sürdü."},
     {n:10,name:"I. Süleyman (Kanuni)",deathNote:"Sefer sırasında öldü (1566)."},
     {n:16,name:"II. Osman (Genç Osman)",deathNote:"İsyanla tahttan indirildi; öldürüldü (1622)."},
     {n:18,name:"I. İbrahim",deathNote:"Tahttan indirildi; boğduruldu (1648)."},
@@ -323,7 +333,7 @@
     const m = t.match(/(\d{1,2})\s*\.?\s*padi/);
     if(!m) return null;
     const n = parseInt(m[1],10);
-    return OTTOMAN.find(x=>x.n===n) || {n, name:"(Bu numara için detay listende yok)", deathNote:"İstersen ben listeyi büyüteyim."};
+    return OTTOMAN.find(x=>x.n===n) || {n, name:"(Bu numara listemde yok)", deathNote:"Bunu Google linkiyle aratabilirim."};
   }
 
   // ---------- Mini tests ----------
@@ -336,10 +346,6 @@
     "elektrik": [
       {q:"Seri devrede ampul sayısı artarsa parlaklık genelde?", a:["Artar","Azalır","Değişmez"], c:1},
       {q:"Paralel devrede bir ampul patlarsa diğerleri?", a:["Söner","Yanmayı sürdürür","Hepsi patlar"], c:1},
-    ],
-    "osmanli": [
-      {q:"İstanbul’u fetheden padişah?", a:["Fatih","Yavuz","Kanuni"], c:0},
-      {q:"Osmanlı’nın kurucusu?", a:["Orhan","Osman","I. Murad"], c:1},
     ]
   };
 
@@ -350,8 +356,7 @@
     let k=null;
     if(key.includes("karisim")) k="karisimlar";
     else if(key.includes("elektrik")) k="elektrik";
-    else if(key.includes("osman")) k="osmanli";
-    else return "Bu test yok. Deneyin: test: karışımlar / elektrik / osmanlı";
+    else return "Bu test yok. Deneyin: test: karışımlar / elektrik";
 
     state.test = {key:k, i:0, score:0};
     store.set("mea_test", state.test);
@@ -380,7 +385,7 @@
 
     state.test.i++;
     if(state.test.i >= bank.length){
-      out += `\nTest bitti! Skor: ${state.test.score}/${bank.length}\nYeni test: "test: karışımlar / elektrik / osmanlı"`;
+      out += `\nTest bitti! Skor: ${state.test.score}/${bank.length}\nYeni test: "test: karışımlar" veya "test: elektrik"`;
       state.test=null; store.set("mea_test", state.test);
       return out.trim();
     }
@@ -421,10 +426,9 @@
     return null;
   }
 
-  // ---------- Topic explain ----------
+  // ---------- Topic explain (örnek) ----------
   function explainTopic(raw){
     const t = norm(raw);
-
     if(t.includes("7 sinif") && t.includes("konu")) return listTopics();
 
     if(t.startsWith("konu anlat:")){
@@ -437,14 +441,14 @@
 • Kapalı devre: yanar. Açık devre: yanmaz.
 • Seri devre: tek yol; biri çıkarsa devre bozulur.
 • Paralel devre: kollar bağımsız çalışır.
-İstersen: "Elektrik devreleri detay" veya "test: elektrik"`;
+İstersen: "test: elektrik"`;
       }
       if(topic.includes("karisim")){
         return `Saf Maddeler ve Karışımlar (özet):
 • Saf madde: tek tür tanecik (element/bileşik).
 • Karışım: homojen (tuzlu su) / heterojen (kumlu su).
 • Ayırma: süzme, eleme, mıknatıs, buharlaştırma.
-İstersen: "Karışımlar detay" veya "test: karışımlar"`;
+İstersen: "test: karışımlar"`;
       }
       if(topic.includes("mitoz") || topic.includes("mayoz") || topic.includes("bolunme") || topic.includes("bölünme")){
         return `Hücre Bölünmeleri (özet):
@@ -455,38 +459,16 @@
       return `Bu konuyu açabilirim ama başlığı biraz daha net yaz:
 Örn: "Konu anlat: Karışımlar" / "Konu anlat: Elektrik devreleri" / "Konu anlat: Mitoz-Mayoz"`;
     }
-
-    if(t.endsWith("detay") || t.includes(" detay")){
-      const base = t.replace("detay","").trim() || state.lastTopic;
-      if(!base) return null;
-
-      if(base.includes("elektrik")){
-        return `Elektrik Devreleri (detay):
-• Seri devrede ampul sayısı artarsa parlaklık genelde azalır.
-• Paralel devrede kollar bağımsızdır; bir ampul patlasa diğerleri yanabilir.
-• Ampul parlaklığı: pil sayısı, bağlanma şekli, ampul sayısı gibi etkenlere bağlı.
-İstersen 3 soru sorayım mı? (evet/hayır)`;
-      }
-      if(base.includes("karisim")){
-        return `Karışımlar (detay):
-• Homojen (çözelti): çözünen + çözücü.
-• Heterojen: fazlar görülür (yağ-su).
-Ayırma:
-• Süzme (katı+sıvı), Eleme (katı+katı), Mıknatıs, Buharlaştırma.
-İstersen 5 soru: "test: karışımlar"`;
-      }
-    }
-
     return null;
   }
 
-  // ---------- Daily FAQ ----------
+  // ---------- Daily ----------
   function dailyFAQ(t){
     if(t.includes("saat kac") || t.includes("saat kaç")) return `Şu an saat: ${new Date().toLocaleTimeString("tr-TR")}`;
     if(t.includes("bugun") && (t.includes("gun") || t.includes("tarih"))) return `Bugün: ${today()}`;
     if(t.includes("nasilsin") || t.includes("nasi gidiyor")) return "İyiyim 🙂 Sen nasılsın?";
     if(t.includes("ne yapayim") || t.includes("ne yapalim")){
-      return "3 hızlı öneri:\n1) 10 dk tekrar: \"Konu anlat: ...\"\n2) Mini test: \"test: ...\"\n3) Bir hedef yaz: Bugün tek iş = (…)\nHangisini seçtin?";
+      return "3 hızlı öneri:\n1) \"7. sınıf konular\"\n2) \"Konu anlat: Karışımlar\"\n3) \"test: karışımlar\"";
     }
     return null;
   }
@@ -504,13 +486,14 @@ Ayırma:
   function helpText(){
     return `Komutlar:
 • "Benim adım ..." → isim kaydeder
-• "7. sınıf konular" → tüm ders konu haritası
-• "Konu anlat: ..." / "... detay" → konu anlatım
-• "test: karışımlar / elektrik / osmanlı" → mini test
-• "osmanlının 3. padişahı nasıl öldü" → Osmanlı
+• "7. sınıf konular" → konu haritası
+• "Konu anlat: ..." → konu anlatır
+• "test: karışımlar" / "test: elektrik" → mini test
+• "osmanlının 16. padişahı nasıl öldü" → Osmanlı
 • "cumhuriyet ne zaman ilan edildi" → Cumhuriyet
 • Hesap: "12 bölü 3" / "7*8"
-• Birim: "3 km kaç m" / "2 kg kaç g"`;
+• Birim: "3 km kaç m" / "2 kg kaç g"
+• Bilemezsem: otomatik Google link verir.`;
   }
 
   // ---------- Smart answer ----------
@@ -521,7 +504,7 @@ Ayırma:
     const nameAns = setNameFromText(raw);
     if(nameAns) return nameAns;
 
-    // test
+    // test modu
     const testAns = answerTest(raw);
     if(testAns) return testAns;
 
@@ -531,13 +514,15 @@ Ayırma:
     // osmanlı
     if(t.includes("osmanli") || t.includes("osmanlı")){
       if(t.includes("tum") || t.includes("hepsi") || t.includes("liste")){
-        return "Osmanlı padişah örnek listesi (bazı):\n" + OTTOMAN.map(x=>`${x.n}) ${x.name}`).join("\n") +
+        return "Osmanlı (örnek liste):\n" + OTTOMAN.map(x=>`${x.n}) ${x.name}`).join("\n") +
           "\n\nÖrnek: \"osmanlının 16. padişahı nasıl öldü\"";
       }
       const ord = findOttomanByOrdinal(t);
-      if(t.includes("nasil oldu") || t.includes("nasıl öldü") || t.includes("öldü")){
+      if(t.includes("nasil") || t.includes("nasıl") || t.includes("öldü")){
+        if(ord.name.includes("listemde yok")) return googleLinkFor(raw);
         return `Osmanlı'nın ${ord.n}. padişahı: ${ord.name}\nÖlüm notu: ${ord.deathNote}`;
       }
+      if(ord.name.includes("listemde yok")) return googleLinkFor(raw);
       return `Osmanlı'nın ${ord.n}. padişahı: ${ord.name}`;
     }
 
@@ -547,7 +532,7 @@ Ayırma:
       return REPUBLIC.republicDay;
     }
 
-    // konu anlat
+    // konu anlat / 7. sınıf
     const topic = explainTopic(raw);
     if(topic) return topic;
 
@@ -563,13 +548,8 @@ Ayırma:
     const faq = dailyFAQ(t);
     if(faq) return faq;
 
-    // fallback
-    const nick = state.name ? state.name : "kanka";
-    return `Anladım ${nick}. Şöyle deneyelim:
-• Ders: "Konu anlat: ..." yaz
-• Test: "test: karışımlar / elektrik / osmanlı"
-• Hesap: "12 bölü 3" gibi
-Sorunu biraz daha net yazarsan daha iyi yakalarım.`;
+    // BİLEMEDİ: GOOGLE
+    return googleLinkFor(raw);
   }
 
   // ---------- Restore ----------
@@ -599,12 +579,18 @@ Sorunu biraz daha net yazarsan daha iyi yakalarım.`;
     if(state.chat.length === 0){
       addRow("bot",
 `Selam! Ben ${state.title} 😎
-• GPT görünümü + yazıyor animasyonu var.
-• 7. sınıf konu haritası: "7. sınıf konular"
-• Konu anlatım: "Konu anlat: Karışımlar"
-• Test: "test: karışımlar"
-• Osmanlı: "osmanlının 3. padişahı nasıl öldü"
-• Cumhuriyet: "cumhuriyet ne zaman ilan edildi"`);
+• GPT görünümü + yazıyor animasyonu
+• Bildiğim şeyleri cevaplarım
+• Bilmediğim şeylerde Google linki veririm
+
+Denemek için:
+- "Benim adım Mehmet"
+- "7. sınıf konular"
+- "Konu anlat: Karışımlar"
+- "test: karışımlar"
+- "osmanlının 16. padişahı nasıl öldü"
+- "cumhuriyet ne zaman ilan edildi"
+- "telefonum neden yavaş"`);
     }
   }
 
@@ -630,7 +616,9 @@ Sorunu biraz daha net yazarsan daha iyi yakalarım.`;
   // ---------- Buttons ----------
   $("btnHelp").onclick = () => addRow("bot", helpText());
   $("btnTopics").onclick = () => addRow("bot", listTopics());
-  $("btnOtt").onclick = () => addRow("bot", "Osmanlı komutları:\n• \"osmanlının 3. padişahı nasıl öldü\"\n• \"osmanlının tüm padişahları\" (örnek liste)\n• \"osmanlının 28. padişahı kim\"");
+  $("btnOtt").onclick = () => addRow("bot",
+    "Osmanlı komutları:\n• \"osmanlının 3. padişahı nasıl öldü\"\n• \"osmanlının 10. padişahı kim\"\n• \"osmanlının tüm padişahları\" (örnek liste)\nNot: Listede yoksa Google linki veririm."
+  );
   $("btnClear").onclick = () => {
     if(!confirm("Sohbeti temizleyeyim mi?")) return;
     state.chat = [];
