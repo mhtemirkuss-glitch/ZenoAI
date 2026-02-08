@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mehmet Emir AI</title>
 
+  <!-- PWA / iPhone "Ana Ekrana Ekle" -->
+  <meta name="theme-color" content="#202123">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mehmet Emir AI">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <style>
     :root{
       --bg:#343541;
@@ -141,6 +149,20 @@
       font-size:18px;font-weight:1000;
     }
     .burger:hover{background:rgba(255,255,255,.10)}
+
+    /* ZenoAI mini label */
+    .miniBrand{
+      font-size:12px;
+      font-weight:900;
+      color:rgba(197,197,210,.9);
+      padding:6px 10px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      border-radius:999px;
+      line-height:1;
+      user-select:none;
+    }
+
     .topbar .title{
       font-weight:950;font-size:14px;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -247,8 +269,8 @@
     @media (max-width: 900px){
       .app{grid-template-columns:1fr}
       .burger{display:inline-grid;place-items:center}
-      .sidebar{display:none}              /* desktop sidebar hidden on mobile */
-      .sidebar.mobile{display:flex}       /* mobile sidebar exists */
+      .sidebar{display:none}
+      .sidebar.mobile{display:flex}
       .composer{left:0}
       .topbar .title{max-width:55vw}
     }
@@ -266,7 +288,7 @@
         <div class="brand">
           <div class="logoBox"><span>AI</span></div>
           <div class="brandText">
-            <b id="sbBrand">Mehmet Emir AI</b>
+            <b>Mehmet Emir AI</b>
             <small>Sohbetler</small>
           </div>
         </div>
@@ -324,6 +346,7 @@
       <header class="topbar">
         <div class="topLeft">
           <button class="burger" id="burger" title="Menü">≡</button>
+          <span class="miniBrand">ZenoAI</span>
           <div style="min-width:0">
             <div class="title" id="topTitle">Mehmet Emir AI</div>
             <div class="sub">Menü + yazıyor animasyonu + Google buton</div>
@@ -451,7 +474,7 @@
   // Typewriter (final HTML clickable)
   function typewriter(el, htmlString, speed=12){
     const temp = document.createElement("div");
-    temp.innerHTML = htmlString;
+    temp.innerHTML = htmlString.replace(/\n/g,"<br>");
     const plain = temp.textContent || "";
 
     el.textContent = "";
@@ -472,7 +495,7 @@
     });
   }
 
-  // Knowledge (kısa ama iş görür)
+  // Knowledge (kısa)
   const GRADE7 = {
     "Fen Bilimleri": ["Güneş Sistemi", "Hücre Bölünmeleri", "Kuvvet-Enerji", "Karışımlar", "Işık", "Elektrik Devreleri"],
     "Matematik": ["Tam Sayılar", "Rasyoneller", "Oran-Orantı", "Yüzdeler", "Cebir", "Denklemler", "Veri Analizi"],
@@ -529,7 +552,7 @@
   function smartAnswer(conv, raw){
     const t = norm(raw);
 
-    // ✅ Teşekkür yakalayıcı (senin istediğin)
+    // ✅ Teşekkür / sağol
     if (
       t.includes("tesekkur") || t.includes("teşekkür") ||
       t.includes("sagol") || t.includes("sağol") ||
@@ -677,9 +700,9 @@
     if(conv.messages.length === 0){
       addRowDOM("bot",
 `Selam! Ben ${state.appTitle} 😎
-• Menü telefonda da var: sol üstte (≡) bas
-• Bilmediğim sorularda Google butonu veririm
-• "Sağol / teşekkür" yazınca özel cevap veririm
+• Menü telefonda: sol üstte (≡)
+• "sağol / teşekkür" yazınca özel cevap
+• bilmediğim sorularda Google butonu
 
 Denemek:
 - "7. sınıf konular"
@@ -829,7 +852,6 @@ Denemek:
     setTimeout(async () => {
       removeTypingRow();
 
-      // create bot row
       const row = document.createElement("div");
       row.className = "row";
 
@@ -849,7 +871,6 @@ Denemek:
       chatArea.appendChild(row);
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      // typewriter text then attach meta
       const html = ans.html ? ans.html : (ans.text || "");
       await typewriter(bub, html, 12);
       bub.appendChild(meta);
