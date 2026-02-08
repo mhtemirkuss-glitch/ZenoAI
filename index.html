@@ -22,78 +22,47 @@
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
     a{color:#8ad0ff}
-    .app{
-      display:grid;
-      grid-template-columns: 300px 1fr;
-      min-height:100vh;
-    }
+
+    /* Layout */
+    .app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+    .main{display:flex;flex-direction:column;min-width:0}
 
     /* Sidebar */
     .sidebar{
       background:linear-gradient(180deg,var(--side),var(--side2));
       border-right:1px solid rgba(255,255,255,.08);
-      display:flex;
-      flex-direction:column;
-      padding:12px;
-      gap:10px;
+      display:flex;flex-direction:column;
+      padding:12px;gap:10px;
+      overflow:hidden;
     }
-    .sbTop{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .brand{
-      display:flex;gap:10px;align-items:center;min-width:0;
-    }
+    .sbTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .brand{display:flex;gap:10px;align-items:center;min-width:0}
     .logoBox{
       width:38px;height:38px;border-radius:12px;
       background: linear-gradient(135deg, var(--green), #7aa7ff, #b36bff);
-      background-size: 220% 220%;
+      background-size:220% 220%;
       animation: glowMove 6s linear infinite;
       display:grid;place-items:center;
       border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+      box-shadow:0 10px 25px rgba(0,0,0,.35);
       flex:0 0 auto;
     }
-    .logoBox span{
-      font-weight:1000; letter-spacing:.5px;
-      color:#07110a; font-size:14px;
-      text-shadow: 0 1px 0 rgba(255,255,255,.35);
-    }
+    .logoBox span{font-weight:1000;letter-spacing:.5px;color:#07110a;font-size:14px;text-shadow:0 1px 0 rgba(255,255,255,.35)}
     @keyframes glowMove{
       0%{background-position:0% 50%}
       50%{background-position:100% 50%}
       100%{background-position:0% 50%}
     }
-    .brandText{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
+    .brandText{min-width:0;display:flex;flex-direction:column;gap:2px}
     .brandText b{
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
       background: linear-gradient(90deg,#e7e7ff,#8ad0ff,#e7e7ff);
-      background-size: 200% 100%;
-      -webkit-background-clip:text;
-      color:transparent;
-      animation: titleShine 5s linear infinite;
+      background-size:200% 100%;
+      -webkit-background-clip:text;color:transparent;
+      animation:titleShine 5s linear infinite;
     }
-    @keyframes titleShine{
-      0%{background-position:0%}
-      100%{background-position:200%}
-    }
-    .brandText small{
-      color:rgba(197,197,210,.85);
-      font-size:12px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    @keyframes titleShine{0%{background-position:0%}100%{background-position:200%}}
+    .brandText small{color:rgba(197,197,210,.85);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
     .sbBtn{
       border:1px solid rgba(255,255,255,.12);
@@ -104,10 +73,7 @@
       font-weight:900;
       cursor:pointer;
       font-size:13px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
+      display:flex;align-items:center;justify-content:center;gap:8px;
     }
     .sbBtn:hover{background:rgba(255,255,255,.10)}
     .sbBtn.green{border-color:rgba(25,195,125,.55); background:rgba(25,195,125,.12)}
@@ -123,49 +89,26 @@
       outline:none;
       font-weight:700;
     }
-
     .chats{
       margin-top:8px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      overflow:auto;
-      padding-right:2px;
-      flex:1 1 auto;
+      display:flex;flex-direction:column;gap:6px;
+      overflow:auto;padding-right:2px;flex:1 1 auto;
     }
     .chatItem{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:space-between;
-      padding:10px 10px;
-      border-radius:12px;
+      display:flex;gap:8px;align-items:center;justify-content:space-between;
+      padding:10px 10px;border-radius:12px;
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.04);
       cursor:pointer;
     }
     .chatItem:hover{background:rgba(255,255,255,.08)}
-    .chatItem.active{
-      background:rgba(25,195,125,.12);
-      border-color:rgba(25,195,125,.35);
-    }
+    .chatItem.active{background:rgba(25,195,125,.12);border-color:rgba(25,195,125,.35)}
     .chatTitle{
-      font-size:13px;
-      font-weight:850;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:180px;
+      font-size:13px;font-weight:850;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;
     }
-    .chatMeta{
-      color:rgba(197,197,210,.75);
-      font-size:11px;
-      font-family:var(--mono);
-      white-space:nowrap;
-    }
-    .chatActions{
-      display:flex;gap:6px;flex:0 0 auto;
-    }
+    .chatMeta{color:rgba(197,197,210,.75);font-size:11px;font-family:var(--mono);white-space:nowrap}
+    .chatActions{display:flex;gap:6px;flex:0 0 auto}
     .iconBtn{
       width:30px;height:30px;border-radius:10px;
       border:1px solid rgba(255,255,255,.12);
@@ -176,41 +119,34 @@
     }
     .iconBtn:hover{background:rgba(255,255,255,.10)}
     .iconBtn.red{border-color:rgba(255,77,77,.45); background:rgba(255,77,77,.10)}
-    .sbFooter{
-      border-top:1px solid rgba(255,255,255,.08);
-      padding-top:10px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+    .sbFooter{border-top:1px solid rgba(255,255,255,.08);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+    .note{color:rgba(197,197,210,.85);font-size:12px}
 
-    /* Main */
-    .main{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-    }
+    /* Topbar */
     .topbar{
       position:sticky;top:0;z-index:10;
       background:var(--panel2);
       border-bottom:1px solid rgba(255,255,255,.10);
       padding:10px 14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
     }
+    .topLeft{display:flex;align-items:center;gap:10px;min-width:0}
+    .burger{
+      display:none;
+      width:40px;height:40px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      font-size:18px;font-weight:1000;
+    }
+    .burger:hover{background:rgba(255,255,255,.10)}
     .topbar .title{
-      font-weight:950;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:950;font-size:14px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
       max-width:60vw;
     }
-    .topbar .sub{
-      font-size:12px;color:rgba(197,197,210,.85)
-    }
+    .topbar .sub{font-size:12px;color:rgba(197,197,210,.85)}
     .topbarRight{display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:1px solid rgba(255,255,255,.12);
@@ -225,17 +161,18 @@
     .btn:hover{background:rgba(255,255,255,.10)}
     .btn.green{border-color:rgba(25,195,125,.55); background:rgba(25,195,125,.12)}
 
+    /* Chat */
     .chatArea{
       flex:1 1 auto;
       padding:16px 14px 120px;
-      max-width:980px;
-      width:100%;
+      max-width:980px;width:100%;
       margin:0 auto;
     }
     .row{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
     .row:last-child{border-bottom:none}
     .avatar{
-      width:34px;height:34px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;font-weight:900;
+      width:34px;height:34px;border-radius:10px;flex:0 0 auto;
+      display:grid;place-items:center;font-weight:900;
       background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10)
     }
     .avatar.me{background:rgba(122,167,255,.16);border-color:rgba(122,167,255,.35)}
@@ -246,6 +183,7 @@
       position:fixed;left:300px;right:0;bottom:0;
       background:linear-gradient(180deg, rgba(52,53,65,0), rgba(52,53,65,.95) 35%, rgba(52,53,65,1));
       padding:14px;
+      z-index:9;
     }
     .composer .inner{
       max-width:980px;margin:0 auto;background:var(--panel);
@@ -254,8 +192,9 @@
       padding:10px;align-items:flex-end;box-shadow:0 18px 40px rgba(0,0,0,.35)
     }
     textarea{
-      flex:1;background:transparent;color:var(--text);border:none;outline:none;
-      resize:none;min-height:44px;max-height:160px;font-size:15px;line-height:1.45
+      flex:1;background:transparent;color:var(--text);
+      border:none;outline:none;resize:none;
+      min-height:44px;max-height:160px;font-size:15px;line-height:1.45
     }
     .send{
       background:var(--green);color:#052016;border:none;border-radius:12px;
@@ -266,6 +205,7 @@
     .chip{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:999px;padding:7px 10px;cursor:pointer;user-select:none}
     .chip:hover{background:rgba(255,255,255,.10)}
 
+    /* Typing */
     .typing{display:inline-flex;gap:6px;align-items:center;color:rgba(236,236,241,.9);font-size:14px}
     .dot{width:6px;height:6px;border-radius:999px;background:rgba(236,236,241,.75);animation:bounce 1s infinite}
     .dot:nth-child(2){animation-delay:.12s}
@@ -285,12 +225,30 @@
       border:1px solid rgba(25,195,125,.45);
     }
     .gbtn:hover{filter:brightness(1.05)}
-    .note{color:rgba(197,197,210,.85);font-size:12px}
 
-    /* Mobile */
+    /* Mobile sidebar overlay */
+    .overlay{
+      display:none;
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.55);
+      z-index:20;
+    }
+    .sidebar.mobile{
+      position:fixed;
+      top:0;left:0;bottom:0;
+      width:300px;
+      transform:translateX(-105%);
+      transition:transform .2s ease;
+      z-index:21;
+    }
+    .sidebar.mobile.open{transform:translateX(0)}
+    .overlay.show{display:block}
+
     @media (max-width: 900px){
-      .app{grid-template-columns: 1fr}
-      .sidebar{display:none}
+      .app{grid-template-columns:1fr}
+      .burger{display:inline-grid;place-items:center}
+      .sidebar{display:none}              /* desktop sidebar hidden on mobile */
+      .sidebar.mobile{display:flex}       /* mobile sidebar exists */
       .composer{left:0}
       .topbar .title{max-width:55vw}
     }
@@ -298,44 +256,78 @@
 </head>
 
 <body>
+  <div class="overlay" id="overlay"></div>
+
   <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="sidebar" id="sidebarDesktop">
       <div class="sbTop">
         <div class="brand">
           <div class="logoBox"><span>AI</span></div>
           <div class="brandText">
             <b id="sbBrand">Mehmet Emir AI</b>
-            <small id="sbSub">Sohbetler</small>
+            <small>Sohbetler</small>
           </div>
         </div>
       </div>
 
-      <button class="sbBtn green" id="newChatBtn">+ Yeni sohbet</button>
-
-      <input class="sbSearch" id="sbSearch" placeholder="Sohbet ara..." />
+      <button class="sbBtn green" id="newChatBtnD">+ Yeni sohbet</button>
+      <input class="sbSearch" id="sbSearchD" placeholder="Sohbet ara..." />
 
       <div class="sbTools">
-        <button class="sbBtn" id="btnTopics">7. Sınıf</button>
-        <button class="sbBtn" id="btnHelp">Komutlar</button>
+        <button class="sbBtn" id="btnTopicsD">7. Sınıf</button>
+        <button class="sbBtn" id="btnHelpD">Komutlar</button>
       </div>
 
-      <div class="chats" id="chatList"></div>
+      <div class="chats" id="chatListD"></div>
 
       <div class="sbFooter">
-        <button class="sbBtn" id="btnName">İsim Ayarla</button>
-        <button class="sbBtn danger" id="wipeAllBtn">Hepsini Sil</button>
-        <div class="note">Not: Her şey cihazında (localStorage) saklanır.</div>
+        <button class="sbBtn" id="btnNameD">İsim Ayarla</button>
+        <button class="sbBtn danger" id="wipeAllBtnD">Hepsini Sil</button>
+        <div class="note">Her şey cihazında saklanır.</div>
+      </div>
+    </aside>
+
+    <!-- MOBILE SIDEBAR -->
+    <aside class="sidebar mobile" id="sidebarMobile">
+      <div class="sbTop">
+        <div class="brand">
+          <div class="logoBox"><span>AI</span></div>
+          <div class="brandText">
+            <b>Mehmet Emir AI</b>
+            <small>Sohbetler</small>
+          </div>
+        </div>
+        <button class="iconBtn" id="closeMobile" title="Kapat">×</button>
+      </div>
+
+      <button class="sbBtn green" id="newChatBtnM">+ Yeni sohbet</button>
+      <input class="sbSearch" id="sbSearchM" placeholder="Sohbet ara..." />
+
+      <div class="sbTools">
+        <button class="sbBtn" id="btnTopicsM">7. Sınıf</button>
+        <button class="sbBtn" id="btnHelpM">Komutlar</button>
+      </div>
+
+      <div class="chats" id="chatListM"></div>
+
+      <div class="sbFooter">
+        <button class="sbBtn" id="btnNameM">İsim Ayarla</button>
+        <button class="sbBtn danger" id="wipeAllBtnM">Hepsini Sil</button>
+        <div class="note">Her şey cihazında saklanır.</div>
       </div>
     </aside>
 
     <!-- MAIN -->
     <main class="main">
       <header class="topbar">
-        <div>
-          <div class="title" id="topTitle">Mehmet Emir AI</div>
-          <div class="sub" id="topSub">ChatGPT görünümü • typewriter • Google buton</div>
+        <div class="topLeft">
+          <button class="burger" id="burger" title="Menü">≡</button>
+          <div style="min-width:0">
+            <div class="title" id="topTitle">Mehmet Emir AI</div>
+            <div class="sub">Menü + yazıyor animasyonu + Google buton</div>
+          </div>
         </div>
         <div class="topbarRight">
           <button class="btn" id="renameBtn">Ad değiştir</button>
@@ -347,7 +339,7 @@
 
       <div class="composer">
         <div class="inner">
-          <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "cumhuriyet ne zaman ilan edildi", "telefonum neden yavaş")'></textarea>
+          <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "telefonum neden yavaş")'></textarea>
           <button class="send" id="send">Gönder</button>
         </div>
         <div class="hintbar">
@@ -356,8 +348,8 @@
           <span class="chip" data-q="Konu anlat: Karışımlar">Konu anlat</span>
           <span class="chip" data-q="test: karışımlar">Test</span>
           <span class="chip" data-q="cumhuriyet ne zaman ilan edildi">Cumhuriyet</span>
-          <span class="chip" data-q="3 km kaç m">Birim</span>
           <span class="chip" data-q="telefonum neden yavaş">Google</span>
+          <span class="chip" data-q="teşekkür ederim">Teşekkür</span>
         </div>
       </div>
     </main>
@@ -365,7 +357,6 @@
 
 <script>
 (() => {
-  // ---------- utils ----------
   const $ = (id)=>document.getElementById(id);
   const now = () => new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
   const today = () => new Date().toLocaleDateString("tr-TR",{weekday:"long", year:"numeric", month:"long", day:"numeric"});
@@ -384,14 +375,11 @@
     set(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
   };
 
-  // ---------- data model ----------
-  // conversations: [{id,title,createdAt,updatedAt,messages:[{who,text,t,html?}]}]
   const state = {
     appTitle: "Mehmet Emir AI",
     userName: store.get("mea_userName",""),
     convs: store.get("mea_convs", []),
     activeId: store.get("mea_activeId", null),
-    test: null // per-conversation test state stored inside conv meta? (we keep simple global)
   };
 
   function saveAll(){
@@ -408,12 +396,6 @@
     return state.convs.find(c => c.id === state.activeId) || null;
   }
 
-  function setActive(id){
-    state.activeId = id;
-    saveAll();
-    renderAll();
-  }
-
   function ensureOneConversation(){
     if(state.convs.length === 0){
       const id = uid();
@@ -422,7 +404,8 @@
         title: "Yeni sohbet",
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        messages: []
+        messages: [],
+        _test: null
       });
       state.activeId = id;
       saveAll();
@@ -433,18 +416,29 @@
     }
   }
 
-  // ---------- UI refs ----------
-  const chatArea = $("chatArea");
-  const chatList = $("chatList");
-  const inp = $("inp");
-  const sendBtn = $("send");
-  const sbSearch = $("sbSearch");
+  function setActive(id){
+    state.activeId = id;
+    saveAll();
+    renderAll();
+  }
 
-  $("sbBrand").textContent = state.appTitle;
-  $("topTitle").textContent = state.appTitle;
-  document.title = state.appTitle;
+  // Mobile sidebar toggle
+  const overlay = $("overlay");
+  const sidebarMobile = $("sidebarMobile");
+  function openMobileMenu(){
+    overlay.classList.add("show");
+    sidebarMobile.classList.add("open");
+  }
+  function closeMobileMenu(){
+    overlay.classList.remove("show");
+    sidebarMobile.classList.remove("open");
+  }
 
-  // ---------- google fallback (HTML) ----------
+  $("burger").onclick = openMobileMenu;
+  $("closeMobile").onclick = closeMobileMenu;
+  overlay.onclick = closeMobileMenu;
+
+  // Google fallback (HTML)
   function googleAnswerHTML(question){
     const q = encodeURIComponent((question||"").trim());
     const url = `https://www.google.com/search?q=${q}`;
@@ -454,12 +448,11 @@
     };
   }
 
-  // ---------- typewriter ----------
+  // Typewriter (final HTML clickable)
   function typewriter(el, htmlString, speed=12){
-    // we type as plain text, but allow the final HTML to be set at end (so button works)
     const temp = document.createElement("div");
     temp.innerHTML = htmlString;
-    const plain = temp.textContent || temp.innerText || "";
+    const plain = temp.textContent || "";
 
     el.textContent = "";
     let i = 0;
@@ -471,7 +464,6 @@
           i++;
           setTimeout(tick, speed);
         } else {
-          // set real HTML at end
           el.innerHTML = htmlString.replace(/\n/g, "<br>");
           resolve();
         }
@@ -480,7 +472,179 @@
     });
   }
 
-  // ---------- rendering ----------
+  // Knowledge (kısa ama iş görür)
+  const GRADE7 = {
+    "Fen Bilimleri": ["Güneş Sistemi", "Hücre Bölünmeleri", "Kuvvet-Enerji", "Karışımlar", "Işık", "Elektrik Devreleri"],
+    "Matematik": ["Tam Sayılar", "Rasyoneller", "Oran-Orantı", "Yüzdeler", "Cebir", "Denklemler", "Veri Analizi"],
+    "Türkçe": ["Paragraf", "Yazım-Noktalama", "Sözcük/Cümlede Anlam"],
+    "Sosyal": ["Kültür ve Miras", "Etkin Vatandaşlık", "Üretim-Dağıtım-Tüketim"],
+    "Din": ["Ahlak", "İbadet ve Dua"],
+    "İngilizce": ["Daily Routines", "Likes/Dislikes"]
+  };
+
+  function listTopics(){
+    let out = "7. sınıf konu haritası (özet):\n";
+    for(const [k,v] of Object.entries(GRADE7)){
+      out += `\n• ${k}: ${v.join(", ")}`;
+    }
+    out += "\n\nKullanım:\n- \"Konu anlat: Karışımlar\"\n- \"test: karışımlar\"";
+    return out;
+  }
+
+  const REPUBLIC = {
+    proclamation: "Türkiye Cumhuriyeti 29 Ekim 1923’te ilan edildi; Mustafa Kemal Atatürk ilk cumhurbaşkanı seçildi.",
+    republicDay: "29 Ekim Cumhuriyet Bayramı her yıl 29 Ekim’de kutlanır."
+  };
+
+  const MINI_TESTS = {
+    "karisimlar": [
+      {q:"Homojen karışım hangisidir?", a:["Kumlu su","Tuzlu su","Yağ-su"], c:1},
+      {q:"Tuzlu sudan tuzu ayırma yöntemi?", a:["Süzme","Buharlaştırma","Eleme"], c:1},
+      {q:"Kumlu suyu ayırma yöntemi?", a:["Süzme","Mıknatıs","Damıtma"], c:0},
+    ],
+    "elektrik": [
+      {q:"Seri devrede ampul sayısı artarsa parlaklık genelde?", a:["Artar","Azalır","Değişmez"], c:1},
+      {q:"Paralel devrede bir ampul patlarsa diğerleri?", a:["Söner","Yanmayı sürdürür","Hepsi patlar"], c:1},
+    ]
+  };
+
+  function tryMath(raw){
+    let s = raw.toLowerCase()
+      .replaceAll("çarpı","*").replaceAll("carpi","*").replaceAll("×","*").replaceAll("x","*")
+      .replaceAll("artı","+").replaceAll("arti","+")
+      .replaceAll("eksi","-")
+      .replaceAll("bölü","/").replaceAll("bolu","/").replaceAll("÷","/")
+      .replaceAll(",",".");
+    s = s.replace(/[^0-9+\-*/().\s]/g,"").trim();
+    if(!s) return null;
+    if(!(/\d/.test(s) && /[+\-*/]/.test(s))) return null;
+    try{
+      const v = Function('"use strict";return ('+s+')')();
+      if(!isFinite(v)) return {text:"Sonuç tanımsız (0’a bölme olabilir)."};
+      const pretty = (Math.abs(v)%1===0) ? String(v) : String(Number(v.toFixed(6)));
+      return {text:`Sonuç: ${pretty}\nİşlem: ${s}`};
+    }catch{ return null; }
+  }
+
+  function smartAnswer(conv, raw){
+    const t = norm(raw);
+
+    // ✅ Teşekkür yakalayıcı (senin istediğin)
+    if (
+      t.includes("tesekkur") || t.includes("teşekkür") ||
+      t.includes("sagol") || t.includes("sağol") ||
+      t.includes("eyvallah") || t.includes("allah razi olsun") ||
+      t === "tsk" || t === "tşk" || t === "tşekkür"
+    ){
+      return { text: "Rica ederim, her zaman yanındayım 🤝" };
+    }
+
+    // İsim kaydet
+    const m = raw.match(/benim ad[ıi]m\s+(.+)/i);
+    if(m && m[1]){
+      state.userName = m[1].trim().replace(/[.!?]/g,"");
+      saveAll();
+      return {text:`Tamam ${state.userName} 😎 İsmini kaydettim.`};
+    }
+
+    // Test modu
+    if(conv._test){
+      const a = raw.trim().toUpperCase();
+      const st = conv._test;
+      if(t === "test iptal" || t === "iptal"){
+        conv._test = null;
+        return {text:"Test modunu kapattım ✅"};
+      }
+      if(!["A","B","C"].includes(a)){
+        return {text:`Test modundayız. Sadece A/B/C yaz.\n(Çıkmak için: "test iptal")`};
+      }
+      const bank = MINI_TESTS[st.key];
+      const q = bank[st.i];
+      const idx = {A:0,B:1,C:2}[a];
+      let out="";
+      if(idx===q.c){ st.score++; out+="✅ Doğru!\n"; }
+      else out+=`❌ Yanlış. Doğru: ${["A","B","C"][q.c]}\n`;
+
+      st.i++;
+      if(st.i >= bank.length){
+        out += `\nTest bitti! Skor: ${st.score}/${bank.length}`;
+        conv._test = null;
+        return {text:out.trim()};
+      }
+      const nq = bank[st.i];
+      out += `Soru ${st.i+1}: ${nq.q}\nA) ${nq.a[0]}\nB) ${nq.a[1]}\nC) ${nq.a[2]}\nCevap: A/B/C`;
+      return {text:out.trim()};
+    }
+
+    if(t.startsWith("test:")){
+      const key = norm(t.split("test:")[1]||"");
+      let k=null;
+      if(key.includes("karisim")) k="karisimlar";
+      else if(key.includes("elektrik")) k="elektrik";
+      else return {text:"Bu test yok. Deneyin: test: karışımlar / elektrik"};
+
+      conv._test = {key:k, i:0, score:0};
+      const q = MINI_TESTS[k][0];
+      return {text:`Mini test başladı (${key}).\nSoru 1: ${q.q}\nA) ${q.a[0]}\nB) ${q.a[1]}\nC) ${q.a[2]}\nCevap: A/B/C`};
+    }
+
+    // 7. sınıf konular
+    if(t.includes("7 sinif") && t.includes("konu")) return {text:listTopics()};
+
+    // konu anlat
+    if(t.startsWith("konu anlat:")){
+      const topic = norm(raw.split(":")[1]||"");
+      if(topic.includes("karisim")){
+        return {text:`Karışımlar (özet):
+• Homojen: tuzlu su
+• Heterojen: yağ-su, kumlu su
+• Ayırma: süzme, eleme, mıknatıs, buharlaştırma
+İstersen: "test: karışımlar"`};
+      }
+      if(topic.includes("elektrik")){
+        return {text:`Elektrik devreleri (özet):
+• Kapalı devre: yanar, açık devre: yanmaz
+• Seri: tek yol, biri koparsa hepsi söner
+• Paralel: kollar bağımsız
+İstersen: "test: elektrik"`};
+      }
+      return {text:"Konu başlığını biraz daha net yaz: 'Konu anlat: Karışımlar' gibi."};
+    }
+
+    // cumhuriyet
+    if(t.includes("cumhuriyet")){
+      if(t.includes("ne zaman") || t.includes("ilan")) return {text:`${REPUBLIC.proclamation}\n${REPUBLIC.republicDay}`};
+      return {text:REPUBLIC.republicDay};
+    }
+
+    // günlük
+    if(t.includes("saat kac") || t.includes("saat kaç")) return {text:`Şu an saat: ${new Date().toLocaleTimeString("tr-TR")}`};
+    if(t.includes("bugun") && (t.includes("gun") || t.includes("tarih"))) return {text:`Bugün: ${today()}`};
+
+    // matematik
+    const math = tryMath(raw);
+    if(math) return math;
+
+    // fallback => google
+    return googleAnswerHTML(raw);
+  }
+
+  // UI refs
+  const chatArea = $("chatArea");
+  const inp = $("inp");
+  const sendBtn = $("send");
+
+  // Sidebar render helper (for both desktop & mobile)
+  function fmtDate(ts){
+    const d = new Date(ts);
+    return d.toLocaleDateString("tr-TR",{month:"short", day:"2-digit"});
+  }
+
+  function renderTopbar(){
+    const conv = getActive();
+    $("topTitle").textContent = conv ? conv.title : state.appTitle;
+  }
+
   function addRowDOM(who, text, tstamp, html){
     const row = document.createElement("div");
     row.className = "row";
@@ -491,11 +655,8 @@
 
     const bub = document.createElement("div");
     bub.className = "bubble";
-    if(html){
-      bub.innerHTML = html.replace(/\n/g,"<br>");
-    } else {
-      bub.textContent = text;
-    }
+    if(html) bub.innerHTML = html.replace(/\n/g,"<br>");
+    else bub.textContent = text;
 
     const meta = document.createElement("div");
     meta.className = "meta";
@@ -505,7 +666,6 @@
     row.appendChild(av);
     row.appendChild(bub);
     chatArea.appendChild(row);
-
     chatArea.scrollTop = chatArea.scrollHeight;
   }
 
@@ -517,17 +677,16 @@
     if(conv.messages.length === 0){
       addRowDOM("bot",
 `Selam! Ben ${state.appTitle} 😎
-• Sol menüden sohbetlerini görürsün
-• Yazıyor animasyonu + harf harf yazma var
+• Menü telefonda da var: sol üstte (≡) bas
 • Bilmediğim sorularda Google butonu veririm
+• "Sağol / teşekkür" yazınca özel cevap veririm
 
-Denemek için:
-- "Benim adım Mehmet"
+Denemek:
 - "7. sınıf konular"
 - "Konu anlat: Karışımlar"
 - "test: karışımlar"
-- "cumhuriyet ne zaman ilan edildi"
-- "telefonum neden yavaş"`, Date.now());
+- "telefonum neden yavaş"
+- "teşekkür ederim"`, Date.now());
       return;
     }
 
@@ -536,14 +695,9 @@ Denemek için:
     }
   }
 
-  function fmtDate(ts){
-    const d = new Date(ts);
-    return d.toLocaleDateString("tr-TR",{month:"short", day:"2-digit"});
-  }
-
-  function renderSidebar(){
-    const q = norm(sbSearch.value || "");
-    chatList.innerHTML = "";
+  function renderChatList(listEl, searchValue){
+    const q = norm(searchValue || "");
+    listEl.innerHTML = "";
 
     const convsSorted = [...state.convs].sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
     const filtered = q ? convsSorted.filter(c => norm(c.title).includes(q)) : convsSorted;
@@ -551,7 +705,7 @@ Denemek için:
     for(const c of filtered){
       const item = document.createElement("div");
       item.className = "chatItem" + (c.id === state.activeId ? " active" : "");
-      item.onclick = () => setActive(c.id);
+      item.onclick = () => { setActive(c.id); closeMobileMenu(); };
 
       const left = document.createElement("div");
       left.style.minWidth = "0px";
@@ -581,8 +735,7 @@ Denemek için:
         c.title = (name || "").trim() || "Yeni sohbet";
         c.updatedAt = Date.now();
         saveAll();
-        renderSidebar();
-        renderTopbar();
+        renderAll();
       };
 
       const del = document.createElement("button");
@@ -593,9 +746,7 @@ Denemek için:
         e.stopPropagation();
         if(!confirm("Bu sohbet silinsin mi?")) return;
         state.convs = state.convs.filter(x => x.id !== c.id);
-        if(state.activeId === c.id){
-          state.activeId = state.convs[0]?.id || null;
-        }
+        if(state.activeId === c.id) state.activeId = state.convs[0]?.id || null;
         saveAll();
         ensureOneConversation();
         renderAll();
@@ -606,270 +757,19 @@ Denemek için:
 
       item.appendChild(left);
       item.appendChild(actions);
-      chatList.appendChild(item);
-    }
-  }
 
-  function renderTopbar(){
-    const conv = getActive();
-    $("topTitle").textContent = conv ? conv.title : state.appTitle;
+      listEl.appendChild(item);
+    }
   }
 
   function renderAll(){
-    renderSidebar();
     renderTopbar();
     renderChat();
+    renderChatList($("chatListD"), $("sbSearchD").value);
+    renderChatList($("chatListM"), $("sbSearchM").value);
   }
 
-  // ---------- content knowledge (same logic as earlier, short but useful) ----------
-  const GRADE7 = {
-    "Fen Bilimleri": [
-      ["Güneş Sistemi ve Ötesi","Gezegenler, tutulmalar, uzay teknolojileri."],
-      ["Hücre ve Bölünmeler","Hücre, mitoz-mayoz, büyüme-onarım."],
-      ["Kuvvet ve Enerji","İş-güç-enerji, sürtünme, dönüşüm."],
-      ["Saf Maddeler ve Karışımlar","Element-bileşik, çözelti, ayırma."],
-      ["Işığın Madde ile Etkileşimi","Yansıma-kırılma, mercekler."],
-      ["Elektrik Devreleri","Seri-paralel, parlaklık, devre elemanları."]
-    ],
-    "Matematik": [
-      ["Tam Sayılar","İşlemler, mutlak değer."],
-      ["Rasyonel Sayılar","Kesir-ondalık, işlemler."],
-      ["Oran-Orantı","Doğru/ters orantı."],
-      ["Yüzdeler","İndirim-zam hesapları."],
-      ["Cebirsel İfadeler","Sadeleştirme."],
-      ["Denklemler","Basit denklemler."],
-      ["Veri Analizi","Tablo-grafik yorumlama."]
-    ],
-    "Türkçe": [
-      ["Paragraf","Ana fikir, konu, başlık."],
-      ["Yazım-Noktalama","Kurallar, işaretler."],
-      ["Sözcük/Cümlede Anlam","Neden-sonuç, amaç-sonuç vb."]
-    ],
-    "Sosyal Bilgiler": [
-      ["Kültür ve Miras","Osmanlı kültürü, miras."],
-      ["Etkin Vatandaşlık","Demokrasi, katılım."],
-      ["Üretim-Dağıtım-Tüketim","Kaynaklar, ekonomi."]
-    ],
-    "Din Kültürü": [
-      ["Ahlak","Güzel davranışlar, sorumluluk."],
-      ["İbadet ve Dua","İbadetin anlamı, dua."]
-    ],
-    "İngilizce": [
-      ["Daily Routines","Simple Present, saatler."],
-      ["Likes/Dislikes","Tercih bildirme."]
-    ]
-  };
-
-  function listTopics(){
-    let out = "7. sınıf konu haritası (özet):\n";
-    for(const [lesson, arr] of Object.entries(GRADE7)){
-      out += `\n• ${lesson}:\n` + arr.map((x,i)=>`  ${i+1}) ${x[0]}`).join("\n") + "\n";
-    }
-    out += "\nKullanım:\n- \"Konu anlat: Karışımlar\"\n- \"test: karışımlar\"";
-    return out.trim();
-  }
-
-  const REPUBLIC = {
-    proclamation: "Türkiye Cumhuriyeti 29 Ekim 1923’te ilan edildi; Mustafa Kemal Atatürk ilk cumhurbaşkanı seçildi.",
-    republicDay: "29 Ekim Cumhuriyet Bayramı her yıl 29 Ekim’de kutlanır."
-  };
-
-  const MINI_TESTS = {
-    "karisimlar": [
-      {q:"Homojen karışım hangisidir?", a:["Kumlu su","Tuzlu su","Yağ-su"], c:1},
-      {q:"Tuzlu sudan tuzu ayırma yöntemi?", a:["Süzme","Buharlaştırma","Eleme"], c:1},
-      {q:"Kumlu suyu ayırma yöntemi?", a:["Süzme","Mıknatıs","Damıtma"], c:0},
-    ],
-    "elektrik": [
-      {q:"Seri devrede ampul sayısı artarsa parlaklık genelde?", a:["Artar","Azalır","Değişmez"], c:1},
-      {q:"Paralel devrede bir ampul patlarsa diğerleri?", a:["Söner","Yanmayı sürdürür","Hepsi patlar"], c:1},
-    ]
-  };
-
-  // per-conversation test state
-  function getTest(conv){ return conv._test || null; }
-  function setTest(conv, v){ conv._test = v; }
-
-  function startTest(conv, raw){
-    const t = norm(raw);
-    if(!t.startsWith("test:")) return null;
-    const key = norm(t.split("test:")[1] || "").trim();
-    let k=null;
-    if(key.includes("karisim")) k="karisimlar";
-    else if(key.includes("elektrik")) k="elektrik";
-    else return {text:"Bu test yok. Deneyin: test: karışımlar / elektrik"};
-
-    setTest(conv, {key:k, i:0, score:0});
-    const q = MINI_TESTS[k][0];
-    return {text:`Mini test başladı (${key}).\nSoru 1: ${q.q}\nA) ${q.a[0]}\nB) ${q.a[1]}\nC) ${q.a[2]}\nCevap: A/B/C`};
-  }
-
-  function answerTest(conv, raw){
-    const st = getTest(conv);
-    if(!st) return null;
-
-    const t = norm(raw);
-    if(t === "test iptal" || t === "iptal"){
-      setTest(conv, null);
-      return {text:"Test modunu kapattım ✅"};
-    }
-    const a = raw.trim().toUpperCase();
-    if(!["A","B","C"].includes(a)){
-      return {text:`Test modundayız. Sadece A/B/C yaz.\n(Çıkmak için: "test iptal")`};
-    }
-
-    const bank = MINI_TESTS[st.key];
-    const q = bank[st.i];
-    const idx = {A:0,B:1,C:2}[a];
-
-    let out = "";
-    if(idx===q.c){ st.score++; out += "✅ Doğru!\n"; }
-    else out += `❌ Yanlış. Doğru cevap: ${["A","B","C"][q.c]}\n`;
-
-    st.i++;
-    if(st.i >= bank.length){
-      out += `\nTest bitti! Skor: ${st.score}/${bank.length}\nYeni test: "test: karışımlar" veya "test: elektrik"`;
-      setTest(conv, null);
-      return {text:out.trim()};
-    }
-    const nq = bank[st.i];
-    out += `Soru ${st.i+1}: ${nq.q}\nA) ${nq.a[0]}\nB) ${nq.a[1]}\nC) ${nq.a[2]}\nCevap: A/B/C`;
-    return {text:out.trim()};
-  }
-
-  function tryMath(raw){
-    let s = raw.toLowerCase()
-      .replaceAll("çarpı","*").replaceAll("carpi","*").replaceAll("×","*").replaceAll("x","*")
-      .replaceAll("artı","+").replaceAll("arti","+")
-      .replaceAll("eksi","-")
-      .replaceAll("bölü","/").replaceAll("bolu","/").replaceAll("÷","/")
-      .replaceAll(",",".");
-    s = s.replace(/[^0-9+\-*/().\s]/g,"").trim();
-    if(!s) return null;
-    if(!(/\d/.test(s) && /[+\-*/]/.test(s))) return null;
-    try{
-      const v = Function('"use strict";return ('+s+')')();
-      if(!isFinite(v)) return {text:"Sonuç tanımsız (0’a bölme olabilir)."};
-      const pretty = (Math.abs(v)%1===0) ? String(v) : String(Number(v.toFixed(6)));
-      return {text:`Sonuç: ${pretty}\nİşlem: ${s}`};
-    }catch{ return null; }
-  }
-
-  function unitConvert(t){
-    const m1 = t.match(/(\d+(?:\.\d+)?)\s*km\s*(kac|kaç)?\s*m/);
-    if(m1) return {text:`${m1[1]} km = ${Number(m1[1])*1000} m`};
-    const m2 = t.match(/(\d+(?:\.\d+)?)\s*m\s*(kac|kaç)?\s*cm/);
-    if(m2) return {text:`${m2[1]} m = ${Number(m2[1])*100} cm`};
-    const m3 = t.match(/(\d+(?:\.\d+)?)\s*kg\s*(kac|kaç)?\s*g/);
-    if(m3) return {text:`${m3[1]} kg = ${Number(m3[1])*1000} g`};
-    const m4 = t.match(/(\d+(?:\.\d+)?)\s*l\s*(kac|kaç)?\s*ml/);
-    if(m4) return {text:`${m4[1]} L = ${Number(m4[1])*1000} mL`};
-    return null;
-  }
-
-  function explainTopic(conv, raw){
-    const t = norm(raw);
-
-    if(t.includes("7 sinif") && t.includes("konu")) return {text:listTopics()};
-
-    if(t.startsWith("konu anlat:")){
-      const topic = norm(raw.split(":")[1] || "").trim();
-      conv._lastTopic = topic;
-
-      if(topic.includes("elektrik")){
-        return {text:`Elektrik Devreleri (özet):
-• Devre elemanları: pil, ampul, anahtar, kablo.
-• Kapalı devre: yanar. Açık devre: yanmaz.
-• Seri devre: tek yol; biri çıkarsa devre bozulur.
-• Paralel devre: kollar bağımsız çalışır.
-İstersen: "test: elektrik"`};
-      }
-      if(topic.includes("karisim")){
-        return {text:`Saf Maddeler ve Karışımlar (özet):
-• Saf madde: element/bileşik.
-• Karışım: homojen (tuzlu su) / heterojen (kumlu su).
-• Ayırma: süzme, eleme, mıknatıs, buharlaştırma.
-İstersen: "test: karışımlar"`};
-      }
-      if(topic.includes("mitoz") || topic.includes("mayoz") || topic.includes("bolunme") || topic.includes("bölünme")){
-        return {text:`Hücre Bölünmeleri:
-• Mitoz: 1→2 aynı hücre, büyüme-onarım, kromozom sayısı değişmez.
-• Mayoz: 1→4 farklı hücre, üreme, kromozom sayısı yarıya iner.`};
-      }
-      return null;
-    }
-    return null;
-  }
-
-  function dailyFAQ(t){
-    if(t.includes("saat kac") || t.includes("saat kaç")) return {text:`Şu an saat: ${new Date().toLocaleTimeString("tr-TR")}`};
-    if(t.includes("bugun") && (t.includes("gun") || t.includes("tarih"))) return {text:`Bugün: ${today()}`};
-    if(t.includes("nasilsin") || t.includes("nasi gidiyor")) return {text:"İyiyim 🙂 Sen nasılsın?"};
-    return null;
-  }
-
-  function setNameFromText(raw){
-    const m = raw.match(/benim ad[ıi]m\s+(.+)/i);
-    if(!m || !m[1]) return null;
-    state.userName = m[1].trim().replace(/[.!?]/g,"");
-    saveAll();
-    return {text:`Tamam ${state.userName} 😎 İsmini kaydettim.`};
-  }
-
-  function helpText(){
-    return {text:`Komutlar:
-• "Benim adım ..." → isim kaydeder
-• "7. sınıf konular" → konu haritası
-• "Konu anlat: ..." → konu anlatır
-• "test: karışımlar" / "test: elektrik" → mini test
-• "cumhuriyet ne zaman ilan edildi" → Cumhuriyet
-• Hesap: "12 bölü 3" / "7*8"
-• Birim: "3 km kaç m" / "2 kg kaç g"
-• Bilmediğim sorularda: Google butonu veririm.`};
-  }
-
-  function smartAnswer(conv, raw){
-    const t = norm(raw);
-
-    // name
-    const nameAns = setNameFromText(raw);
-    if(nameAns) return nameAns;
-
-    // test
-    const testAns = answerTest(conv, raw);
-    if(testAns) return testAns;
-    const testStart = startTest(conv, raw);
-    if(testStart) return testStart;
-
-    // republic
-    if(t.includes("cumhuriyet")){
-      if(t.includes("ne zaman") || t.includes("ilan")){
-        return {text: `${REPUBLIC.proclamation}\n${REPUBLIC.republicDay}`};
-      }
-      return {text: REPUBLIC.republicDay};
-    }
-
-    // topics
-    const topic = explainTopic(conv, raw);
-    if(topic) return topic;
-
-    // units
-    const convRes = unitConvert(t);
-    if(convRes) return convRes;
-
-    // math
-    const math = tryMath(raw);
-    if(math) return math;
-
-    // daily
-    const faq = dailyFAQ(t);
-    if(faq) return faq;
-
-    // fallback => google html button
-    return googleAnswerHTML(raw);
-  }
-
-  // ---------- typing row ----------
+  // Typing row
   function addTypingRow(){
     const row = document.createElement("div");
     row.className = "row";
@@ -904,11 +804,9 @@ Denemek için:
     inp.style.height = Math.min(inp.scrollHeight, 160) + "px";
   }
 
-  // ---------- sending ----------
   async function send(){
     const text = inp.value.trim();
     if(!text) return;
-
     const conv = getActive();
     if(!conv) return;
 
@@ -916,8 +814,7 @@ Denemek için:
     autoResize();
     sendBtn.disabled = true;
 
-    // add user message
-    conv.messages.push({who:"me", text, t: Date.now()});
+    conv.messages.push({who:"me", text, t:Date.now()});
     conv.updatedAt = Date.now();
     if(conv.title === "Yeni sohbet"){
       conv.title = text.slice(0, 28) + (text.length>28 ? "…" : "");
@@ -925,17 +822,14 @@ Denemek için:
     saveAll();
     renderAll();
 
-    // typing row
     addTypingRow();
 
-    // compute answer
     const ans = smartAnswer(conv, text);
 
-    // remove typing row and typewriter the bot msg
     setTimeout(async () => {
       removeTypingRow();
 
-      // create bot row dom first (empty bubble)
+      // create bot row
       const row = document.createElement("div");
       row.className = "row";
 
@@ -945,37 +839,32 @@ Denemek için:
 
       const bub = document.createElement("div");
       bub.className = "bubble";
-      bub.textContent = "";
 
       const meta = document.createElement("div");
       meta.className = "meta";
       meta.textContent = `${state.appTitle} • ${now()}`;
-      bub.appendChild(meta);
 
       row.appendChild(av);
       row.appendChild(bub);
       chatArea.appendChild(row);
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      // typewriter content (keep meta at end after typing)
-      meta.remove();
-
+      // typewriter text then attach meta
       const html = ans.html ? ans.html : (ans.text || "");
-      await typewriter(bub, (ans.html ? html : (html || "").replace(/\n/g,"<br>")), 12);
-
+      await typewriter(bub, html, 12);
       bub.appendChild(meta);
 
-      // persist bot message
-      conv.messages.push({who:"bot", text: (ans.text || ""), html: (ans.html || null), t: Date.now()});
+      conv.messages.push({who:"bot", text:(ans.text||""), html:(ans.html||null), t:Date.now()});
       conv.updatedAt = Date.now();
       saveAll();
-      renderSidebar(); // update counts/title
+      renderAll();
+
       sendBtn.disabled = false;
       inp.focus();
-    }, 350);
+    }, 320);
   }
 
-  // ---------- actions ----------
+  // Actions
   function newChat(){
     const id = uid();
     state.convs.unshift({
@@ -983,11 +872,13 @@ Denemek için:
       title:"Yeni sohbet",
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      messages:[]
+      messages: [],
+      _test: null
     });
     state.activeId = id;
     saveAll();
     renderAll();
+    closeMobileMenu();
   }
 
   function clearActiveChat(){
@@ -995,6 +886,7 @@ Denemek için:
     if(!conv) return;
     if(!confirm("Bu sohbetin içi temizlensin mi?")) return;
     conv.messages = [];
+    conv._test = null;
     conv.updatedAt = Date.now();
     saveAll();
     renderAll();
@@ -1018,6 +910,7 @@ Denemek için:
     saveAll();
     ensureOneConversation();
     renderAll();
+    closeMobileMenu();
   }
 
   function setUserName(){
@@ -1028,38 +921,50 @@ Denemek için:
     alert(state.userName ? `Tamam ${state.userName} 🙂` : "İsim temizlendi.");
   }
 
-  // ---------- hook up ----------
-  $("newChatBtn").onclick = newChat;
-  $("clearBtn").onclick = clearActiveChat;
+  // Wire buttons (Desktop + Mobile)
+  $("newChatBtnD").onclick = newChat;
+  $("newChatBtnM").onclick = newChat;
+
+  $("wipeAllBtnD").onclick = wipeAll;
+  $("wipeAllBtnM").onclick = wipeAll;
+
+  $("btnNameD").onclick = setUserName;
+  $("btnNameM").onclick = setUserName;
+
+  $("btnHelpD").onclick = () => {
+    const conv = getActive(); if(!conv) return;
+    conv.messages.push({who:"bot", text:`Komutlar:
+• "Benim adım ..." → isim kaydeder
+• "7. sınıf konular"
+• "Konu anlat: Karışımlar"
+• "test: karışımlar" / "test: elektrik"
+• "cumhuriyet ne zaman ilan edildi"
+• "sağol / teşekkür" → özel cevap
+• bilmezsem Google butonu`, t:Date.now()});
+    conv.updatedAt = Date.now();
+    saveAll(); renderAll();
+  };
+  $("btnHelpM").onclick = $("btnHelpD").onclick;
+
+  $("btnTopicsD").onclick = () => {
+    const conv = getActive(); if(!conv) return;
+    conv.messages.push({who:"bot", text:listTopics(), t:Date.now()});
+    conv.updatedAt = Date.now();
+    saveAll(); renderAll();
+  };
+  $("btnTopicsM").onclick = $("btnTopicsD").onclick;
+
+  $("sbSearchD").addEventListener("input", () => renderChatList($("chatListD"), $("sbSearchD").value));
+  $("sbSearchM").addEventListener("input", () => renderChatList($("chatListM"), $("sbSearchM").value));
+
   $("renameBtn").onclick = renameActiveChat;
-  $("wipeAllBtn").onclick = wipeAll;
-  $("btnName").onclick = setUserName;
-
-  $("btnHelp").onclick = () => {
-    const conv = getActive();
-    if(!conv) return;
-    conv.messages.push({who:"bot", text: helpText().text, t: Date.now()});
-    conv.updatedAt = Date.now();
-    saveAll();
-    renderAll();
-  };
-
-  $("btnTopics").onclick = () => {
-    const conv = getActive();
-    if(!conv) return;
-    conv.messages.push({who:"bot", text: listTopics(), t: Date.now()});
-    conv.updatedAt = Date.now();
-    saveAll();
-    renderAll();
-  };
-
-  sbSearch.addEventListener("input", renderSidebar);
+  $("clearBtn").onclick = clearActiveChat;
 
   document.querySelectorAll("[data-q]").forEach(ch => {
     ch.addEventListener("click", () => {
       inp.value = ch.getAttribute("data-q");
-      autoResize();
-      inp.focus();
+      autoResize(); inp.focus();
+      closeMobileMenu();
     });
   });
 
@@ -1072,11 +977,10 @@ Denemek için:
     }
   });
 
-  // ---------- init ----------
+  // Init
   ensureOneConversation();
   renderAll();
   autoResize();
-
 })();
 </script>
 </body>
