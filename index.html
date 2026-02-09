@@ -3,1006 +3,712 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mehmet Emir AI</title>
-
-  <!-- PWA / iPhone "Ana Ekrana Ekle" -->
-  <meta name="theme-color" content="#202123">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Mehmet Emir AI">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
-
+  <title>ZenoAI</title>
+  <meta name="description" content="ZenoAI - Sohbet + 7. Sınıf + Genel Bilgi" />
   <style>
     :root{
-      --bg:#343541;
-      --panel:#40414f;
-      --panel2:#202123;
-      --side:#111214;
-      --side2:#0c0d0f;
-      --text:#ececf1;
-      --muted:#c5c5d2;
-      --border:rgba(255,255,255,.12);
-      --green:#19c37d;
-      --danger:#ff4d4d;
-      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --bg:#0b0f19;
+      --panel:#0f1626;
+      --panel2:#0d1322;
+      --card:#111a2e;
+      --card2:#0f1a33;
+      --text:#eaf0ff;
+      --muted:#9aa7c1;
+      --line:rgba(255,255,255,.08);
+      --accent:#7c3aed;
+      --accent2:#22c55e;
+      --danger:#ef4444;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius:18px;
+      --radius2:14px;
+      --font: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    a{color:#8ad0ff}
-
-    /* Layout */
-    .app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
-    .main{display:flex;flex-direction:column;min-width:0}
-
-    /* Sidebar */
-    .sidebar{
-      background:linear-gradient(180deg,var(--side),var(--side2));
-      border-right:1px solid rgba(255,255,255,.08);
-      display:flex;flex-direction:column;
-      padding:12px;gap:10px;
+    body{
+      margin:0;
+      background: radial-gradient(1200px 600px at 20% 5%, rgba(124,58,237,.25), transparent 60%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.18), transparent 60%),
+                  radial-gradient(1000px 600px at 50% 90%, rgba(59,130,246,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      font-family:var(--font);
+      min-height:100vh;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 14px 26px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      position:sticky;
+      top:10px;
+      backdrop-filter: blur(10px);
+      z-index:10;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      min-width: 220px;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:14px;
+      display:grid; place-items:center;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.25), rgba(255,255,255,0)),
+                  linear-gradient(135deg, rgba(124,58,237,.9), rgba(59,130,246,.7));
+      border:1px solid rgba(255,255,255,.12);
+      position:relative;
       overflow:hidden;
     }
-    .sbTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .brand{display:flex;gap:10px;align-items:center;min-width:0}
-    .logoBox{
-      width:38px;height:38px;border-radius:12px;
-      background: linear-gradient(135deg, var(--green), #7aa7ff, #b36bff);
-      background-size:220% 220%;
-      animation: glowMove 6s linear infinite;
-      display:grid;place-items:center;
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow:0 10px 25px rgba(0,0,0,.35);
-      flex:0 0 auto;
+    .logo::after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
+      transform: rotate(25deg);
+      animation: shine 2.8s linear infinite;
     }
-    .logoBox span{font-weight:1000;letter-spacing:.5px;color:#07110a;font-size:14px;text-shadow:0 1px 0 rgba(255,255,255,.35)}
-    @keyframes glowMove{
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
+    @keyframes shine{
+      0%{transform:translateX(-40%) rotate(25deg)}
+      100%{transform:translateX(40%) rotate(25deg)}
     }
-    .brandText{min-width:0;display:flex;flex-direction:column;gap:2px}
-    .brandText b{
-      font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-      background: linear-gradient(90deg,#e7e7ff,#8ad0ff,#e7e7ff);
-      background-size:200% 100%;
-      -webkit-background-clip:text;color:transparent;
-      animation:titleShine 5s linear infinite;
+    .logo span{font-weight:900; letter-spacing:.5px}
+    .titlebox{display:flex; flex-direction:column; line-height:1.05}
+    .title{
+      font-size:18px; font-weight:900; letter-spacing:.3px;
+      display:flex; align-items:baseline; gap:8px;
     }
-    @keyframes titleShine{0%{background-position:0%}100%{background-position:200%}}
-    .brandText small{color:rgba(197,197,210,.85);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-    .sbBtn{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border-radius:12px;
-      padding:10px 12px;
-      font-weight:900;
-      cursor:pointer;
-      font-size:13px;
-      display:flex;align-items:center;justify-content:center;gap:8px;
-    }
-    .sbBtn:hover{background:rgba(255,255,255,.10)}
-    .sbBtn.green{border-color:rgba(25,195,125,.55); background:rgba(25,195,125,.12)}
-    .sbBtn.danger{border-color:rgba(255,77,77,.45); background:rgba(255,77,77,.10)}
-    .sbTools{display:grid;grid-template-columns:1fr 1fr; gap:8px}
-    .sbSearch{
-      width:100%;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:12px;
-      padding:10px 12px;
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      outline:none;
-      font-weight:700;
-    }
-    .chats{
-      margin-top:8px;
-      display:flex;flex-direction:column;gap:6px;
-      overflow:auto;padding-right:2px;flex:1 1 auto;
-    }
-    .chatItem{
-      display:flex;gap:8px;align-items:center;justify-content:space-between;
-      padding:10px 10px;border-radius:12px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-    }
-    .chatItem:hover{background:rgba(255,255,255,.08)}
-    .chatItem.active{background:rgba(25,195,125,.12);border-color:rgba(25,195,125,.35)}
-    .chatTitle{
-      font-size:13px;font-weight:850;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;
-    }
-    .chatMeta{color:rgba(197,197,210,.75);font-size:11px;font-family:var(--mono);white-space:nowrap}
-    .chatActions{display:flex;gap:6px;flex:0 0 auto}
-    .iconBtn{
-      width:30px;height:30px;border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      cursor:pointer;
-      font-weight:900;
-    }
-    .iconBtn:hover{background:rgba(255,255,255,.10)}
-    .iconBtn.red{border-color:rgba(255,77,77,.45); background:rgba(255,77,77,.10)}
-    .sbFooter{border-top:1px solid rgba(255,255,255,.08);padding-top:10px;display:flex;flex-direction:column;gap:8px}
-    .note{color:rgba(197,197,210,.85);font-size:12px}
-
-    /* Topbar */
-    .topbar{
-      position:sticky;top:0;z-index:10;
-      background:var(--panel2);
-      border-bottom:1px solid rgba(255,255,255,.10);
-      padding:10px 14px;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-    }
-    .topLeft{display:flex;align-items:center;gap:10px;min-width:0}
-    .burger{
-      display:none;
-      width:40px;height:40px;border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      cursor:pointer;
-      font-size:18px;font-weight:1000;
-    }
-    .burger:hover{background:rgba(255,255,255,.10)}
-
-    /* ZenoAI mini label */
-    .miniBrand{
+    .title .ai{
       font-size:12px;
-      font-weight:900;
-      color:rgba(197,197,210,.9);
-      padding:6px 10px;
+      padding:3px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+    }
+    .subtitle{font-size:12px; color:var(--muted)}
+    .nav{
+      display:flex; align-items:center; gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
       border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.05);
-      border-radius:999px;
-      line-height:1;
-      user-select:none;
-    }
-
-    .topbar .title{
-      font-weight:950;font-size:14px;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-      max-width:60vw;
-    }
-    .topbar .sub{font-size:12px;color:rgba(197,197,210,.85)}
-    .topbarRight{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
       color:var(--text);
-      border-radius:12px;
       padding:8px 10px;
-      font-weight:900;
+      border-radius:999px;
+      font-size:13px;
       cursor:pointer;
-      font-size:13px
+      transition:.15s transform, .15s background, .15s border;
+      user-select:none;
+      display:inline-flex; gap:8px; align-items:center;
     }
-    .btn:hover{background:rgba(255,255,255,.10)}
-    .btn.green{border-color:rgba(25,195,125,.55); background:rgba(25,195,125,.12)}
-
-    /* Chat */
-    .chatArea{
-      flex:1 1 auto;
-      padding:16px 14px 120px;
-      max-width:980px;width:100%;
-      margin:0 auto;
+    .pill:hover{transform:translateY(-1px); background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.16)}
+    .pill.active{
+      background:rgba(124,58,237,.22);
+      border-color:rgba(124,58,237,.45);
     }
-    .row{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-    .row:last-child{border-bottom:none}
-    .avatar{
-      width:34px;height:34px;border-radius:10px;flex:0 0 auto;
-      display:grid;place-items:center;font-weight:900;
-      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10)
+    .grid{
+      display:grid;
+      grid-template-columns: 1.45fr .9fr;
+      gap:14px;
+      margin-top:14px;
     }
-    .avatar.me{background:rgba(122,167,255,.16);border-color:rgba(122,167,255,.35)}
-    .avatar.bot{background:rgba(109,70,255,.14);border-color:rgba(109,70,255,.35)}
-    .bubble{flex:1;white-space:pre-wrap;word-break:break-word;line-height:1.55;font-size:15px}
-    .meta{margin-top:6px;font-size:12px;color:rgba(197,197,210,.85);font-family:var(--mono)}
-    .composer{
-      position:fixed;left:300px;right:0;bottom:0;
-      background:linear-gradient(180deg, rgba(52,53,65,0), rgba(52,53,65,.95) 35%, rgba(52,53,65,1));
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr; }
+      .brand{min-width:auto}
+    }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panelHead{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      background:rgba(0,0,0,.18);
+      border-bottom:1px solid var(--line);
+    }
+    .panelHead .hint{
+      font-size:12px; color:var(--muted)
+    }
+    .chat{
+      height: 520px;
+      overflow:auto;
       padding:14px;
-      z-index:9;
+      background: radial-gradient(800px 400px at 30% 0%, rgba(124,58,237,.08), transparent 55%),
+                  radial-gradient(700px 350px at 80% 10%, rgba(34,197,94,.06), transparent 55%),
+                  var(--panel2);
     }
-    .composer .inner{
-      max-width:980px;margin:0 auto;background:var(--panel);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;display:flex;gap:10px;
-      padding:10px;align-items:flex-end;box-shadow:0 18px 40px rgba(0,0,0,.35)
+    .msg{
+      max-width: 90%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      margin:8px 0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      line-height:1.35;
+    }
+    .msg .meta{font-size:11px; color:var(--muted); margin-top:6px}
+    .msg.user{
+      margin-left:auto;
+      background:rgba(124,58,237,.18);
+      border-color:rgba(124,58,237,.35);
+    }
+    .msg.bot{
+      margin-right:auto;
+      background:rgba(255,255,255,.04);
+    }
+    .composer{
+      display:flex;
+      gap:10px;
+      padding:12px;
+      border-top:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      align-items:flex-end;
     }
     textarea{
-      flex:1;background:transparent;color:var(--text);
-      border:none;outline:none;resize:none;
-      min-height:44px;max-height:160px;font-size:15px;line-height:1.45
+      width:100%;
+      min-height:42px;
+      max-height:120px;
+      resize:vertical;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      outline:none;
+      font-family:var(--font);
+      font-size:14px;
     }
-    .send{
-      background:var(--green);color:#052016;border:none;border-radius:12px;
-      padding:10px 14px;font-weight:950;cursor:pointer;min-width:90px
+    .btn{
+      border:none;
+      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(59,130,246,.75));
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.15s transform, .15s opacity;
+      white-space:nowrap;
+      height:42px;
     }
-    .send:disabled{opacity:.55;cursor:not-allowed}
-    .hintbar{max-width:980px;margin:10px auto 0;display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px}
-    .chip{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:999px;padding:7px 10px;cursor:pointer;user-select:none}
-    .chip:hover{background:rgba(255,255,255,.10)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn.secondary{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--text);
+      font-weight:600;
+    }
 
-    /* Typing */
-    .typing{display:inline-flex;gap:6px;align-items:center;color:rgba(236,236,241,.9);font-size:14px}
-    .dot{width:6px;height:6px;border-radius:999px;background:rgba(236,236,241,.75);animation:bounce 1s infinite}
-    .dot:nth-child(2){animation-delay:.12s}
-    .dot:nth-child(3){animation-delay:.24s}
-    @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.6}40%{transform:translateY(-5px);opacity:1}}
-
-    /* Google button inside message */
-    .gbtn{
-      display:inline-block;
-      margin-top:10px;
-      padding:9px 12px;
-      background:var(--green);
-      color:#052016;
-      border-radius:12px;
-      font-weight:950;
-      text-decoration:none;
-      border:1px solid rgba(25,195,125,.45);
+    .side{
+      padding:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
     }
-    .gbtn:hover{filter:brightness(1.05)}
-
-    /* Mobile sidebar overlay */
-    .overlay{
-      display:none;
-      position:fixed;inset:0;
-      background:rgba(0,0,0,.55);
-      z-index:20;
+    .card{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin-bottom:12px;
     }
-    .sidebar.mobile{
-      position:fixed;
-      top:0;left:0;bottom:0;
-      width:300px;
-      transform:translateX(-105%);
-      transition:transform .2s ease;
-      z-index:21;
+    .card h3{
+      margin:0 0 8px;
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:.2px;
+      font-weight:700;
     }
-    .sidebar.mobile.open{transform:translateX(0)}
-    .overlay.show{display:block}
-
-    @media (max-width: 900px){
-      .app{grid-template-columns:1fr}
-      .burger{display:inline-grid;place-items:center}
-      .sidebar{display:none}
-      .sidebar.mobile{display:flex}
-      .composer{left:0}
-      .topbar .title{max-width:55vw}
+    .quick{
+      display:flex; flex-wrap:wrap; gap:8px;
+    }
+    .chip{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.09);
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      transition:.15s transform, .15s background;
+    }
+    .chip:hover{transform:translateY(-1px); background:rgba(255,255,255,.06)}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+    .small{
+      font-size:12px; color:var(--muted)
+    }
+    .divider{height:1px; background:var(--line); margin:10px 0}
+    .badge{
+      display:inline-flex; gap:6px; align-items:center;
+      font-size:12px; color:var(--muted);
+      border:1px solid rgba(255,255,255,.10);
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+    }
+    .dot{width:8px; height:8px; border-radius:999px; background:var(--accent2)}
+    .typing{
+      display:inline-flex; gap:6px; align-items:center;
+      font-size:12px; color:var(--muted);
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      margin:6px 0 0;
+    }
+    .bub{width:6px; height:6px; border-radius:999px; background:rgba(255,255,255,.45); animation: pop 1.1s infinite}
+    .bub:nth-child(2){animation-delay:.15s}
+    .bub:nth-child(3){animation-delay:.3s}
+    @keyframes pop{
+      0%,100%{transform:translateY(0); opacity:.5}
+      50%{transform:translateY(-3px); opacity:1}
     }
   </style>
 </head>
-
 <body>
-  <div class="overlay" id="overlay"></div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-label="ZenoAI logo"><span>Z</span></div>
+        <div class="titlebox">
+          <div class="title">
+            <span id="brandTitle">ZenoAI</span>
+            <span class="ai">Sohbet + 7. Sınıf</span>
+          </div>
+          <div class="subtitle" id="subtitle">Hızlı cevap • konu anlatımı • mini test</div>
+        </div>
+      </div>
 
-  <div class="app">
+      <div class="nav">
+        <div class="pill active" data-tab="chat">💬 Sohbet</div>
+        <div class="pill" data-tab="ders">📚 7. Sınıf</div>
+        <div class="pill" data-tab="tarih">🏛️ Tarih</div>
+        <div class="pill" data-tab="ayar">⚙️ Ayar</div>
+      </div>
+    </div>
 
-    <!-- DESKTOP SIDEBAR -->
-    <aside class="sidebar" id="sidebarDesktop">
-      <div class="sbTop">
-        <div class="brand">
-          <div class="logoBox"><span>AI</span></div>
-          <div class="brandText">
-            <b>Mehmet Emir AI</b>
-            <small>Sohbetler</small>
+    <div class="grid">
+      <!-- MAIN -->
+      <div class="panel">
+        <div class="panelHead">
+          <div class="badge"><span class="dot"></span> <span id="modeBadge">Mod: Sohbet</span></div>
+          <div class="hint" id="hintText">Örn: “Konu anlat: Karışımlar” • “test: elektrik devreleri” • “12 bölü 3”</div>
+        </div>
+
+        <div id="chat" class="chat" aria-live="polite"></div>
+
+        <div class="composer">
+          <textarea id="input" placeholder='Bir şey yaz... (örn: "İstanbul’u kim fethetti?" / "Konu anlat: Hücre" / "teşekkürler")'></textarea>
+          <button class="btn" id="sendBtn">Gönder</button>
+        </div>
+      </div>
+
+      <!-- SIDE -->
+      <div class="panel side">
+        <div class="card">
+          <h3>Hızlı Denemeler</h3>
+          <div class="quick" id="quickChips"></div>
+          <div class="divider"></div>
+          <div class="kbd">
+            <div><b>Komutlar</b></div>
+            <div>• <b>Benim adım</b> ... (isim hatırlar)</div>
+            <div>• <b>Konu anlat:</b> ...</div>
+            <div>• <b>test:</b> ...</div>
+            <div>• <b>7. sınıf konular</b></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Menü</h3>
+          <div class="small">
+            Üstteki menüden mod değiştir. ZenoAI, soruyu algılayıp en uygun şekilde cevaplar.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Not</h3>
+          <div class="small">
+            Bu sürüm “hazır bilgi havuzu + kurallar” ile çalışır. Daha gerçek AI için API eklenebilir.
           </div>
         </div>
       </div>
-
-      <button class="sbBtn green" id="newChatBtnD">+ Yeni sohbet</button>
-      <input class="sbSearch" id="sbSearchD" placeholder="Sohbet ara..." />
-
-      <div class="sbTools">
-        <button class="sbBtn" id="btnTopicsD">7. Sınıf</button>
-        <button class="sbBtn" id="btnHelpD">Komutlar</button>
-      </div>
-
-      <div class="chats" id="chatListD"></div>
-
-      <div class="sbFooter">
-        <button class="sbBtn" id="btnNameD">İsim Ayarla</button>
-        <button class="sbBtn danger" id="wipeAllBtnD">Hepsini Sil</button>
-        <div class="note">Her şey cihazında saklanır.</div>
-      </div>
-    </aside>
-
-    <!-- MOBILE SIDEBAR -->
-    <aside class="sidebar mobile" id="sidebarMobile">
-      <div class="sbTop">
-        <div class="brand">
-          <div class="logoBox"><span>AI</span></div>
-          <div class="brandText">
-            <b>Mehmet Emir AI</b>
-            <small>Sohbetler</small>
-          </div>
-        </div>
-        <button class="iconBtn" id="closeMobile" title="Kapat">×</button>
-      </div>
-
-      <button class="sbBtn green" id="newChatBtnM">+ Yeni sohbet</button>
-      <input class="sbSearch" id="sbSearchM" placeholder="Sohbet ara..." />
-
-      <div class="sbTools">
-        <button class="sbBtn" id="btnTopicsM">7. Sınıf</button>
-        <button class="sbBtn" id="btnHelpM">Komutlar</button>
-      </div>
-
-      <div class="chats" id="chatListM"></div>
-
-      <div class="sbFooter">
-        <button class="sbBtn" id="btnNameM">İsim Ayarla</button>
-        <button class="sbBtn danger" id="wipeAllBtnM">Hepsini Sil</button>
-        <div class="note">Her şey cihazında saklanır.</div>
-      </div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main">
-      <header class="topbar">
-        <div class="topLeft">
-          <button class="burger" id="burger" title="Menü">≡</button>
-          <span class="miniBrand">ZenoAI</span>
-          <div style="min-width:0">
-            <div class="title" id="topTitle">Mehmet Emir AI</div>
-            <div class="sub">Menü + yazıyor animasyonu + Google buton</div>
-          </div>
-        </div>
-        <div class="topbarRight">
-          <button class="btn" id="renameBtn">Ad değiştir</button>
-          <button class="btn green" id="clearBtn">Sohbeti temizle</button>
-        </div>
-      </header>
-
-      <section class="chatArea" id="chatArea"></section>
-
-      <div class="composer">
-        <div class="inner">
-          <textarea id="inp" placeholder='Bir şey yaz... (örn: "Konu anlat: Karışımlar", "test: karışımlar", "telefonum neden yavaş")'></textarea>
-          <button class="send" id="send">Gönder</button>
-        </div>
-        <div class="hintbar">
-          <span class="chip" data-q="Benim adım Mehmet">Benim adım…</span>
-          <span class="chip" data-q="7. sınıf konular">7. sınıf konular</span>
-          <span class="chip" data-q="Konu anlat: Karışımlar">Konu anlat</span>
-          <span class="chip" data-q="test: karışımlar">Test</span>
-          <span class="chip" data-q="cumhuriyet ne zaman ilan edildi">Cumhuriyet</span>
-          <span class="chip" data-q="telefonum neden yavaş">Google</span>
-          <span class="chip" data-q="teşekkür ederim">Teşekkür</span>
-        </div>
-      </div>
-    </main>
+    </div>
   </div>
 
 <script>
-(() => {
-  const $ = (id)=>document.getElementById(id);
-  const now = () => new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
-  const today = () => new Date().toLocaleDateString("tr-TR",{weekday:"long", year:"numeric", month:"long", day:"numeric"});
+/* =========================
+   ZenoAI - Tek Dosya
+   (Hazır bilgi + kurallar)
+========================= */
 
-  function norm(s){
-    return (s||"").toLowerCase()
-      .replaceAll("ı","i").replaceAll("ğ","g").replaceAll("ü","u")
-      .replaceAll("ş","s").replaceAll("ö","o").replaceAll("ç","c")
-      .replace(/[?!.,"'’]/g," ")
-      .replace(/\s+/g," ")
-      .trim();
-  }
+const state = {
+  tab: "chat",
+  userName: "",
+  testMode: false,
+  testTopic: "",
+};
 
-  const store = {
-    get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } },
-    set(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
-  };
+const $chat = document.getElementById("chat");
+const $input = document.getElementById("input");
+const $sendBtn = document.getElementById("sendBtn");
+const $modeBadge = document.getElementById("modeBadge");
+const $hintText = document.getElementById("hintText");
+const $subtitle = document.getElementById("subtitle");
+const $quick = document.getElementById("quickChips");
 
-  const state = {
-    appTitle: "Mehmet Emir AI",
-    userName: store.get("mea_userName",""),
-    convs: store.get("mea_convs", []),
-    activeId: store.get("mea_activeId", null),
-  };
+const quickPrompts = [
+  "Benim adım Mehmet Emir",
+  "7. sınıf konular",
+  "Konu anlat: Karışımlar",
+  "Konu anlat: Elektrik Devreleri",
+  "test: karışımlar",
+  "12 bölü 3",
+  "Osmanlının 2. padişahı kim?",
+  "İstanbul’u hangi padişah fethetti?",
+  "Cumhuriyet ne zaman ilan edildi?",
+  "teşekkürler",
+];
 
-  function saveAll(){
-    store.set("mea_userName", state.userName);
-    store.set("mea_convs", state.convs);
-    store.set("mea_activeId", state.activeId);
-  }
+function nowTime(){
+  const d = new Date();
+  return d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+}
 
-  function uid(){
-    return "c_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
-  }
+function addMsg(role, text){
+  const div = document.createElement("div");
+  div.className = "msg " + (role === "user" ? "user":"bot");
+  div.innerHTML = `${escapeHtml(text)}<div class="meta">${role==="user" ? (state.userName || "Sen") : "ZenoAI"} • ${nowTime()}</div>`;
+  $chat.appendChild(div);
+  $chat.scrollTop = $chat.scrollHeight;
+}
 
-  function getActive(){
-    return state.convs.find(c => c.id === state.activeId) || null;
-  }
+function escapeHtml(str){
+  return (str+"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
 
-  function ensureOneConversation(){
-    if(state.convs.length === 0){
-      const id = uid();
-      state.convs.push({
-        id,
-        title: "Yeni sohbet",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        messages: [],
-        _test: null
-      });
-      state.activeId = id;
-      saveAll();
+function showTyping(){
+  const t = document.createElement("div");
+  t.className="typing";
+  t.id="typing";
+  t.innerHTML = `<span class="bub"></span><span class="bub"></span><span class="bub"></span> düşünüyorum...`;
+  $chat.appendChild(t);
+  $chat.scrollTop = $chat.scrollHeight;
+}
+function hideTyping(){
+  const t = document.getElementById("typing");
+  if(t) t.remove();
+}
+
+/* ---------- Bilgi Havuzu ---------- */
+
+// Günlük basit sorular
+const dailyQA = [
+  { keys:["nasılsın","naber","ne haber"], answer:(q)=> `İyiyim${state.userName? " "+state.userName:""} 😄 Sen nasılsın?` },
+  { keys:["kaç yaşındasın","yaşın"], answer:()=> "Ben bir yapay zekayım 🙂 Yaşım yok ama her gün daha iyi oluyorum." },
+  { keys:["saat kaç","kaçta"], answer:()=> "Şu anki saat: " + nowTime() },
+  { keys:["teşekkür","sağol","sağ ol","eyvallah"], answer:()=> "Rica ederim her zaman yanındayım. 🙌" },
+  { keys:["selam","merhaba","sa"], answer:()=> `Selam! Ben ZenoAI 🤝 İstersen “Benim adım ...” yaz.` },
+];
+
+// Osmanlı padişahları (kısa demo; istersen genişletiriz)
+const ottoman = [
+  { n:1, name:"Osman Gazi" },
+  { n:2, name:"Orhan Gazi" },
+  { n:3, name:"I. Murad (Hüdavendigâr)" },
+  { n:4, name:"Yıldırım Bayezid" },
+  { n:5, name:"I. Mehmed (Çelebi)" },
+  { n:6, name:"II. Murad" },
+  { n:7, name:"Fatih Sultan Mehmed" },
+];
+
+// Cumhuriyet bilgileri
+const republicFacts = [
+  { keys:["cumhuriyet ne zaman","cumhuriyet ilan"], answer:()=> "Türkiye Cumhuriyeti 29 Ekim 1923’te ilan edildi." },
+  { keys:["tbmm ne zaman","meclis ne zaman açıldı"], answer:()=> "TBMM 23 Nisan 1920’de açıldı." },
+];
+
+// 7. sınıf konu başlıkları (özet liste)
+const grade7 = {
+  "Matematik": [
+    "Tam sayılar ve rasyonel sayılar",
+    "Oran-orantı, yüzde",
+    "Cebirsel ifadeler",
+    "Eşitlik ve denklem",
+    "Doğrular-açılar",
+    "Çokgenler",
+    "Çember ve daire",
+    "Veri analizi"
+  ],
+  "Fen Bilimleri": [
+    "Hücre ve bölünmeler",
+    "Kuvvet ve enerji",
+    "Saf maddeler ve karışımlar",
+    "Işığın madde ile etkileşimi",
+    "Elektrik devreleri"
+  ],
+  "Türkçe": [
+    "Sözcükte anlam",
+    "Cümlede anlam",
+    "Paragraf",
+    "Fiilimsiler",
+    "Yazım kuralları ve noktalama"
+  ],
+  "Sosyal Bilgiler": [
+    "İletişim ve insan ilişkileri",
+    "Üretim, dağıtım ve tüketim",
+    "Türk tarihinde yolculuk",
+    "Demokrasinin serüveni"
+  ],
+  "Din Kültürü": [
+    "İbadet ve dua",
+    "Ahlak",
+    "Peygamberlerin örnekliği"
+  ],
+  "İngilizce": [
+    "Daily routines",
+    "Preferences",
+    "Descriptions",
+    "Simple questions & answers"
+  ]
+};
+
+// Konu anlatımı mini metinleri (örnek)
+const topicExplain = {
+  "karışımlar": `Karışımlar, en az iki maddenin kimyasal tepkime olmadan bir araya gelmesiyle oluşur.\n• Homojen: Her yerde aynı (tuzlu su)\n• Heterojen: Her yerde aynı değil (kumlu su)\nAyırma yöntemleri: süzme, eleme, buharlaştırma, mıknatısla ayırma, ayırma hunisi.`,
+  "elektrik devreleri": `Basit elektrik devresi: pil (üreteç) + ampul (alıcı) + anahtar + bağlantı kablosu.\n• Seri devre: Ampuller artarsa parlaklık azalır.\n• Paralel devre: Ampuller birbirinden bağımsız yanar.\nAnahtar açıkken devre tamamlanmaz, akım geçmez.`,
+  "ibadet ve dua": `İbadet: Allah’a kulluk etmek için yapılan davranışlar (namaz, oruç, zekat vb.).\nDua: Allah’tan istemek, şükretmek ve yardım dilemek.\nİbadet ve dua insanın hem manevi hem de ahlaki gelişimine katkı sağlar.`
+};
+
+// Mini test soruları (örnek)
+const miniTests = {
+  "karışımlar": [
+    {q:"Tuzlu su hangi tür karışımdır?", a:"Homojen karışım."},
+    {q:"Kumlu suyu ayırmak için hangi yöntem kullanılır?", a:"Süzme (filtreleme)."},
+    {q:"Demir tozu ve kum karışımı nasıl ayrılır?", a:"Mıknatısla ayırma."},
+  ],
+  "elektrik devreleri": [
+    {q:"Anahtar açıkken akım geçer mi?", a:"Hayır, devre tamamlanmaz."},
+    {q:"Seri devrede ampul sayısı artarsa parlaklık ne olur?", a:"Azalır."},
+    {q:"Paralel devrede bir ampul patlarsa diğerleri yanar mı?", a:"Evet, yanar."},
+  ]
+};
+
+/* ---------- Yorumlayıcı ---------- */
+
+function normalize(s){
+  return (s||"")
+    .toLowerCase()
+    .replaceAll("’","'")
+    .trim();
+}
+
+function answerFor(userText){
+  const text = normalize(userText);
+
+  // isim hatırlama
+  if(text.startsWith("benim adım")){
+    const name = userText.split(" ").slice(2).join(" ").trim();
+    if(name){
+      state.userName = name;
+      return `Tamam ${state.userName}! İsmini hatırlayacağım. ✅\nİstersen soru sor veya “7. sınıf konular” yaz.`;
     }
-    if(!state.activeId || !getActive()){
-      state.activeId = state.convs[0].id;
-      saveAll();
+    return "İsmini şöyle yaz: “Benim adım Mehmet”";
+  }
+
+  // test modu
+  if(text.startsWith("test:")){
+    const topic = normalize(userText.split(":").slice(1).join(":")).trim();
+    if(!topic) return "Test için örnek: “test: karışımlar”";
+    state.testMode = true;
+    state.testTopic = topic;
+    const t = miniTests[topic];
+    if(!t) return `Bu konuda test hazır değil: “${topic}”.\nÖrnek: test: karışımlar / test: elektrik devreleri`;
+    return `Mini test başladı ✅\n1) ${t[0].q}\n(Cevabını yaz, ben kontrol edeyim.)`;
+  }
+
+  // test cevap kontrol
+  if(state.testMode){
+    const t = miniTests[state.testTopic];
+    if(!t){ state.testMode=false; return "Test modu kapandı."; }
+
+    // basit kontrol: kullanıcı bir şey yazdıysa bir sonraki soruya geç
+    // (burayı istersen “doğru-yanlış” daha akıllı yaparız)
+    const idx = window.__testIndex ?? 0;
+    const correct = t[idx].a;
+    const nextIdx = idx + 1;
+
+    window.__testIndex = nextIdx;
+
+    if(nextIdx >= t.length){
+      state.testMode = false;
+      window.__testIndex = 0;
+      return `Cevabın için teşekkürler ✅\nDoğru cevap: ${correct}\nTest bitti. İstersen başka test: “test: elektrik devreleri”`;
     }
+    return `Doğru cevap (örnek): ${correct}\n\n${nextIdx+1}) ${t[nextIdx].q}`;
   }
 
-  function setActive(id){
-    state.activeId = id;
-    saveAll();
-    renderAll();
-  }
-
-  // Mobile sidebar toggle
-  const overlay = $("overlay");
-  const sidebarMobile = $("sidebarMobile");
-  function openMobileMenu(){
-    overlay.classList.add("show");
-    sidebarMobile.classList.add("open");
-  }
-  function closeMobileMenu(){
-    overlay.classList.remove("show");
-    sidebarMobile.classList.remove("open");
-  }
-
-  $("burger").onclick = openMobileMenu;
-  $("closeMobile").onclick = closeMobileMenu;
-  overlay.onclick = closeMobileMenu;
-
-  // Google fallback (HTML)
-  function googleAnswerHTML(question){
-    const q = encodeURIComponent((question||"").trim());
-    const url = `https://www.google.com/search?q=${q}`;
-    return {
-      text: `Bunu Google’da arayabilirsin 👇`,
-      html: `Bunu Google’da arayabilirsin 👇\n\n<a class="gbtn" href="${url}" target="_blank" rel="noopener">Google’da Ara</a>`
-    };
-  }
-
-  // Typewriter (final HTML clickable)
-  function typewriter(el, htmlString, speed=12){
-    const temp = document.createElement("div");
-    temp.innerHTML = htmlString.replace(/\n/g,"<br>");
-    const plain = temp.textContent || "";
-
-    el.textContent = "";
-    let i = 0;
-
-    return new Promise(resolve => {
-      const tick = () => {
-        if(i < plain.length){
-          el.textContent += plain.charAt(i);
-          i++;
-          setTimeout(tick, speed);
-        } else {
-          el.innerHTML = htmlString.replace(/\n/g, "<br>");
-          resolve();
-        }
-      };
-      tick();
-    });
-  }
-
-  // Knowledge (kısa)
-  const GRADE7 = {
-    "Fen Bilimleri": ["Güneş Sistemi", "Hücre Bölünmeleri", "Kuvvet-Enerji", "Karışımlar", "Işık", "Elektrik Devreleri"],
-    "Matematik": ["Tam Sayılar", "Rasyoneller", "Oran-Orantı", "Yüzdeler", "Cebir", "Denklemler", "Veri Analizi"],
-    "Türkçe": ["Paragraf", "Yazım-Noktalama", "Sözcük/Cümlede Anlam"],
-    "Sosyal": ["Kültür ve Miras", "Etkin Vatandaşlık", "Üretim-Dağıtım-Tüketim"],
-    "Din": ["Ahlak", "İbadet ve Dua"],
-    "İngilizce": ["Daily Routines", "Likes/Dislikes"]
-  };
-
-  function listTopics(){
-    let out = "7. sınıf konu haritası (özet):\n";
-    for(const [k,v] of Object.entries(GRADE7)){
-      out += `\n• ${k}: ${v.join(", ")}`;
+  // 7. sınıf konular listesi
+  if(text.includes("7. sınıf") && (text.includes("konu") || text.includes("konular"))){
+    let out = "📚 7. Sınıf Konular (özet)\n";
+    for(const [ders, list] of Object.entries(grade7)){
+      out += `\n• ${ders}\n  - ${list.join("\n  - ")}\n`;
     }
-    out += "\n\nKullanım:\n- \"Konu anlat: Karışımlar\"\n- \"test: karışımlar\"";
+    out += `\nİstersen “Konu anlat: ...” yaz. Örn: “Konu anlat: Karışımlar”`;
     return out;
   }
 
-  const REPUBLIC = {
-    proclamation: "Türkiye Cumhuriyeti 29 Ekim 1923’te ilan edildi; Mustafa Kemal Atatürk ilk cumhurbaşkanı seçildi.",
-    republicDay: "29 Ekim Cumhuriyet Bayramı her yıl 29 Ekim’de kutlanır."
-  };
-
-  const MINI_TESTS = {
-    "karisimlar": [
-      {q:"Homojen karışım hangisidir?", a:["Kumlu su","Tuzlu su","Yağ-su"], c:1},
-      {q:"Tuzlu sudan tuzu ayırma yöntemi?", a:["Süzme","Buharlaştırma","Eleme"], c:1},
-      {q:"Kumlu suyu ayırma yöntemi?", a:["Süzme","Mıknatıs","Damıtma"], c:0},
-    ],
-    "elektrik": [
-      {q:"Seri devrede ampul sayısı artarsa parlaklık genelde?", a:["Artar","Azalır","Değişmez"], c:1},
-      {q:"Paralel devrede bir ampul patlarsa diğerleri?", a:["Söner","Yanmayı sürdürür","Hepsi patlar"], c:1},
-    ]
-  };
-
-  function tryMath(raw){
-    let s = raw.toLowerCase()
-      .replaceAll("çarpı","*").replaceAll("carpi","*").replaceAll("×","*").replaceAll("x","*")
-      .replaceAll("artı","+").replaceAll("arti","+")
-      .replaceAll("eksi","-")
-      .replaceAll("bölü","/").replaceAll("bolu","/").replaceAll("÷","/")
-      .replaceAll(",",".");
-    s = s.replace(/[^0-9+\-*/().\s]/g,"").trim();
-    if(!s) return null;
-    if(!(/\d/.test(s) && /[+\-*/]/.test(s))) return null;
-    try{
-      const v = Function('"use strict";return ('+s+')')();
-      if(!isFinite(v)) return {text:"Sonuç tanımsız (0’a bölme olabilir)."};
-      const pretty = (Math.abs(v)%1===0) ? String(v) : String(Number(v.toFixed(6)));
-      return {text:`Sonuç: ${pretty}\nİşlem: ${s}`};
-    }catch{ return null; }
+  // konu anlat
+  if(text.startsWith("konu anlat:")){
+    const topic = normalize(userText.split(":").slice(1).join(":")).trim();
+    if(!topic) return "Örnek: “Konu anlat: Karışımlar”";
+    const found = topicExplain[topic];
+    if(found) return `📌 Konu Anlatımı: ${topic.toUpperCase()}\n\n${found}`;
+    return `Bu konuda kısa anlatım hazır değil: “${topic}”.\nİstersen konunun adını daha net yaz veya “7. sınıf konular” de.`;
   }
 
-  function smartAnswer(conv, raw){
-    const t = norm(raw);
-
-    // ✅ Teşekkür / sağol
-    if (
-      t.includes("tesekkur") || t.includes("teşekkür") ||
-      t.includes("sagol") || t.includes("sağol") ||
-      t.includes("eyvallah") || t.includes("allah razi olsun") ||
-      t === "tsk" || t === "tşk" || t === "tşekkür"
-    ){
-      return { text: "Rica ederim, her zaman yanındayım 🤝" };
-    }
-
-    // İsim kaydet
-    const m = raw.match(/benim ad[ıi]m\s+(.+)/i);
-    if(m && m[1]){
-      state.userName = m[1].trim().replace(/[.!?]/g,"");
-      saveAll();
-      return {text:`Tamam ${state.userName} 😎 İsmini kaydettim.`};
-    }
-
-    // Test modu
-    if(conv._test){
-      const a = raw.trim().toUpperCase();
-      const st = conv._test;
-      if(t === "test iptal" || t === "iptal"){
-        conv._test = null;
-        return {text:"Test modunu kapattım ✅"};
-      }
-      if(!["A","B","C"].includes(a)){
-        return {text:`Test modundayız. Sadece A/B/C yaz.\n(Çıkmak için: "test iptal")`};
-      }
-      const bank = MINI_TESTS[st.key];
-      const q = bank[st.i];
-      const idx = {A:0,B:1,C:2}[a];
-      let out="";
-      if(idx===q.c){ st.score++; out+="✅ Doğru!\n"; }
-      else out+=`❌ Yanlış. Doğru: ${["A","B","C"][q.c]}\n`;
-
-      st.i++;
-      if(st.i >= bank.length){
-        out += `\nTest bitti! Skor: ${st.score}/${bank.length}`;
-        conv._test = null;
-        return {text:out.trim()};
-      }
-      const nq = bank[st.i];
-      out += `Soru ${st.i+1}: ${nq.q}\nA) ${nq.a[0]}\nB) ${nq.a[1]}\nC) ${nq.a[2]}\nCevap: A/B/C`;
-      return {text:out.trim()};
-    }
-
-    if(t.startsWith("test:")){
-      const key = norm(t.split("test:")[1]||"");
-      let k=null;
-      if(key.includes("karisim")) k="karisimlar";
-      else if(key.includes("elektrik")) k="elektrik";
-      else return {text:"Bu test yok. Deneyin: test: karışımlar / elektrik"};
-
-      conv._test = {key:k, i:0, score:0};
-      const q = MINI_TESTS[k][0];
-      return {text:`Mini test başladı (${key}).\nSoru 1: ${q.q}\nA) ${q.a[0]}\nB) ${q.a[1]}\nC) ${q.a[2]}\nCevap: A/B/C`};
-    }
-
-    // 7. sınıf konular
-    if(t.includes("7 sinif") && t.includes("konu")) return {text:listTopics()};
-
-    // konu anlat
-    if(t.startsWith("konu anlat:")){
-      const topic = norm(raw.split(":")[1]||"");
-      if(topic.includes("karisim")){
-        return {text:`Karışımlar (özet):
-• Homojen: tuzlu su
-• Heterojen: yağ-su, kumlu su
-• Ayırma: süzme, eleme, mıknatıs, buharlaştırma
-İstersen: "test: karışımlar"`};
-      }
-      if(topic.includes("elektrik")){
-        return {text:`Elektrik devreleri (özet):
-• Kapalı devre: yanar, açık devre: yanmaz
-• Seri: tek yol, biri koparsa hepsi söner
-• Paralel: kollar bağımsız
-İstersen: "test: elektrik"`};
-      }
-      return {text:"Konu başlığını biraz daha net yaz: 'Konu anlat: Karışımlar' gibi."};
-    }
-
-    // cumhuriyet
-    if(t.includes("cumhuriyet")){
-      if(t.includes("ne zaman") || t.includes("ilan")) return {text:`${REPUBLIC.proclamation}\n${REPUBLIC.republicDay}`};
-      return {text:REPUBLIC.republicDay};
-    }
-
-    // günlük
-    if(t.includes("saat kac") || t.includes("saat kaç")) return {text:`Şu an saat: ${new Date().toLocaleTimeString("tr-TR")}`};
-    if(t.includes("bugun") && (t.includes("gun") || t.includes("tarih"))) return {text:`Bugün: ${today()}`};
-
-    // matematik
-    const math = tryMath(raw);
-    if(math) return math;
-
-    // fallback => google
-    return googleAnswerHTML(raw);
+  // basit matematik: bölme / çarpma / toplama / çıkarma (çok basit)
+  // örn: "12 bölü 3"
+  const bolu = text.match(/^(\d+)\s*(bölü|bolu|\/)\s*(\d+)$/);
+  if(bolu){
+    const a = Number(bolu[1]);
+    const b = Number(bolu[3]);
+    if(b === 0) return "0’a bölme tanımsızdır.";
+    return `${a} ÷ ${b} = ${a / b}`;
   }
 
-  // UI refs
-  const chatArea = $("chatArea");
-  const inp = $("inp");
-  const sendBtn = $("send");
-
-  // Sidebar render helper (for both desktop & mobile)
-  function fmtDate(ts){
-    const d = new Date(ts);
-    return d.toLocaleDateString("tr-TR",{month:"short", day:"2-digit"});
-  }
-
-  function renderTopbar(){
-    const conv = getActive();
-    $("topTitle").textContent = conv ? conv.title : state.appTitle;
-  }
-
-  function addRowDOM(who, text, tstamp, html){
-    const row = document.createElement("div");
-    row.className = "row";
-
-    const av = document.createElement("div");
-    av.className = "avatar " + (who==="me" ? "me":"bot");
-    av.textContent = who==="me" ? "S" : "AI";
-
-    const bub = document.createElement("div");
-    bub.className = "bubble";
-    if(html) bub.innerHTML = html.replace(/\n/g,"<br>");
-    else bub.textContent = text;
-
-    const meta = document.createElement("div");
-    meta.className = "meta";
-    meta.textContent = (who==="me" ? "Sen" : state.appTitle) + " • " + new Date(tstamp).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
-    bub.appendChild(meta);
-
-    row.appendChild(av);
-    row.appendChild(bub);
-    chatArea.appendChild(row);
-    chatArea.scrollTop = chatArea.scrollHeight;
-  }
-
-  function renderChat(){
-    chatArea.innerHTML = "";
-    const conv = getActive();
-    if(!conv) return;
-
-    if(conv.messages.length === 0){
-      addRowDOM("bot",
-`Selam! Ben ${state.appTitle} 😎
-• Menü telefonda: sol üstte (≡)
-• "sağol / teşekkür" yazınca özel cevap
-• bilmediğim sorularda Google butonu
-
-Denemek:
-- "7. sınıf konular"
-- "Konu anlat: Karışımlar"
-- "test: karışımlar"
-- "telefonum neden yavaş"
-- "teşekkür ederim"`, Date.now());
-      return;
+  // Osmanlı padişah soruları (kaçıncı / kim)
+  if(text.includes("osmanlı") && (text.includes("padişah") || text.includes("padisah"))){
+    const numMatch = text.match(/(\d+)\.?/);
+    if(numMatch && text.includes("padişah") && (text.includes("kim") || text.includes("kimdir"))){
+      const n = Number(numMatch[1]);
+      const found = ottoman.find(x=>x.n===n);
+      if(found) return `Osmanlı'nın ${n}. padişahı: ${found.name}`;
+      return `Şu an listemde ilk ${ottoman.length} padişah var. İstersen ben listeyi büyüteyim.`;
     }
-
-    for(const m of conv.messages){
-      addRowDOM(m.who, m.text, m.t, m.html);
+    if(text.includes("istanbul") && (text.includes("fetih") || text.includes("fethett") || text.includes("kim fethetti"))){
+      return "İstanbul’u 1453’te Fatih Sultan Mehmed fethetti.";
     }
   }
 
-  function renderChatList(listEl, searchValue){
-    const q = norm(searchValue || "");
-    listEl.innerHTML = "";
-
-    const convsSorted = [...state.convs].sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
-    const filtered = q ? convsSorted.filter(c => norm(c.title).includes(q)) : convsSorted;
-
-    for(const c of filtered){
-      const item = document.createElement("div");
-      item.className = "chatItem" + (c.id === state.activeId ? " active" : "");
-      item.onclick = () => { setActive(c.id); closeMobileMenu(); };
-
-      const left = document.createElement("div");
-      left.style.minWidth = "0px";
-
-      const title = document.createElement("div");
-      title.className = "chatTitle";
-      title.textContent = c.title || "Sohbet";
-
-      const meta = document.createElement("div");
-      meta.className = "chatMeta";
-      meta.textContent = `${fmtDate(c.updatedAt || c.createdAt)} • ${c.messages?.length || 0} mesaj`;
-
-      left.appendChild(title);
-      left.appendChild(meta);
-
-      const actions = document.createElement("div");
-      actions.className = "chatActions";
-
-      const ren = document.createElement("button");
-      ren.className = "iconBtn";
-      ren.title = "Yeniden adlandır";
-      ren.textContent = "✎";
-      ren.onclick = (e) => {
-        e.stopPropagation();
-        const name = prompt("Sohbet adı:", c.title || "Yeni sohbet");
-        if(name === null) return;
-        c.title = (name || "").trim() || "Yeni sohbet";
-        c.updatedAt = Date.now();
-        saveAll();
-        renderAll();
-      };
-
-      const del = document.createElement("button");
-      del.className = "iconBtn red";
-      del.title = "Sil";
-      del.textContent = "🗑";
-      del.onclick = (e) => {
-        e.stopPropagation();
-        if(!confirm("Bu sohbet silinsin mi?")) return;
-        state.convs = state.convs.filter(x => x.id !== c.id);
-        if(state.activeId === c.id) state.activeId = state.convs[0]?.id || null;
-        saveAll();
-        ensureOneConversation();
-        renderAll();
-      };
-
-      actions.appendChild(ren);
-      actions.appendChild(del);
-
-      item.appendChild(left);
-      item.appendChild(actions);
-
-      listEl.appendChild(item);
-    }
+  // Cumhuriyet
+  for(const r of republicFacts){
+    if(r.keys.some(k=>text.includes(k))) return r.answer(text);
   }
 
-  function renderAll(){
-    renderTopbar();
-    renderChat();
-    renderChatList($("chatListD"), $("sbSearchD").value);
-    renderChatList($("chatListM"), $("sbSearchM").value);
+  // Günlük sorular
+  for(const d of dailyQA){
+    if(d.keys.some(k=>text.includes(k))) return d.answer(text);
   }
 
-  // Typing row
-  function addTypingRow(){
-    const row = document.createElement("div");
-    row.className = "row";
-    row.id = "typingRow";
+  // Fallback
+  return `Bunu daha iyi cevaplayabilmem için biraz daha net yazar mısın?\nÖrn:\n- “Konu anlat: Karışımlar”\n- “test: elektrik devreleri”\n- “Cumhuriyet ne zaman ilan edildi?”`;
+}
 
-    const av = document.createElement("div");
-    av.className = "avatar bot";
-    av.textContent = "AI";
-
-    const bub = document.createElement("div");
-    bub.className = "bubble";
-    bub.innerHTML = `<span class="typing">${state.appTitle} yazıyor <span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`;
-
-    const meta = document.createElement("div");
-    meta.className = "meta";
-    meta.textContent = `${state.appTitle} • ${now()}`;
-    bub.appendChild(meta);
-
-    row.appendChild(av);
-    row.appendChild(bub);
-    chatArea.appendChild(row);
-    chatArea.scrollTop = chatArea.scrollHeight;
-  }
-
-  function removeTypingRow(){
-    const t = document.getElementById("typingRow");
-    if(t) t.remove();
-  }
-
-  function autoResize(){
-    inp.style.height = "0px";
-    inp.style.height = Math.min(inp.scrollHeight, 160) + "px";
-  }
-
-  async function send(){
-    const text = inp.value.trim();
-    if(!text) return;
-    const conv = getActive();
-    if(!conv) return;
-
-    inp.value = "";
-    autoResize();
-    sendBtn.disabled = true;
-
-    conv.messages.push({who:"me", text, t:Date.now()});
-    conv.updatedAt = Date.now();
-    if(conv.title === "Yeni sohbet"){
-      conv.title = text.slice(0, 28) + (text.length>28 ? "…" : "");
-    }
-    saveAll();
-    renderAll();
-
-    addTypingRow();
-
-    const ans = smartAnswer(conv, text);
-
-    setTimeout(async () => {
-      removeTypingRow();
-
-      const row = document.createElement("div");
-      row.className = "row";
-
-      const av = document.createElement("div");
-      av.className = "avatar bot";
-      av.textContent = "AI";
-
-      const bub = document.createElement("div");
-      bub.className = "bubble";
-
-      const meta = document.createElement("div");
-      meta.className = "meta";
-      meta.textContent = `${state.appTitle} • ${now()}`;
-
-      row.appendChild(av);
-      row.appendChild(bub);
-      chatArea.appendChild(row);
-      chatArea.scrollTop = chatArea.scrollHeight;
-
-      const html = ans.html ? ans.html : (ans.text || "");
-      await typewriter(bub, html, 12);
-      bub.appendChild(meta);
-
-      conv.messages.push({who:"bot", text:(ans.text||""), html:(ans.html||null), t:Date.now()});
-      conv.updatedAt = Date.now();
-      saveAll();
-      renderAll();
-
-      sendBtn.disabled = false;
-      inp.focus();
-    }, 320);
-  }
-
-  // Actions
-  function newChat(){
-    const id = uid();
-    state.convs.unshift({
-      id,
-      title:"Yeni sohbet",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      messages: [],
-      _test: null
-    });
-    state.activeId = id;
-    saveAll();
-    renderAll();
-    closeMobileMenu();
-  }
-
-  function clearActiveChat(){
-    const conv = getActive();
-    if(!conv) return;
-    if(!confirm("Bu sohbetin içi temizlensin mi?")) return;
-    conv.messages = [];
-    conv._test = null;
-    conv.updatedAt = Date.now();
-    saveAll();
-    renderAll();
-  }
-
-  function renameActiveChat(){
-    const conv = getActive();
-    if(!conv) return;
-    const name = prompt("Sohbet adı:", conv.title || "Yeni sohbet");
-    if(name === null) return;
-    conv.title = (name || "").trim() || "Yeni sohbet";
-    conv.updatedAt = Date.now();
-    saveAll();
-    renderAll();
-  }
-
-  function wipeAll(){
-    if(!confirm("TÜM sohbetler silinsin mi?")) return;
-    state.convs = [];
-    state.activeId = null;
-    saveAll();
-    ensureOneConversation();
-    renderAll();
-    closeMobileMenu();
-  }
-
-  function setUserName(){
-    const n = prompt("Adın ne? (Örn: Mehmet)", state.userName || "");
-    if(n === null) return;
-    state.userName = (n||"").trim();
-    saveAll();
-    alert(state.userName ? `Tamam ${state.userName} 🙂` : "İsim temizlendi.");
-  }
-
-  // Wire buttons (Desktop + Mobile)
-  $("newChatBtnD").onclick = newChat;
-  $("newChatBtnM").onclick = newChat;
-
-  $("wipeAllBtnD").onclick = wipeAll;
-  $("wipeAllBtnM").onclick = wipeAll;
-
-  $("btnNameD").onclick = setUserName;
-  $("btnNameM").onclick = setUserName;
-
-  $("btnHelpD").onclick = () => {
-    const conv = getActive(); if(!conv) return;
-    conv.messages.push({who:"bot", text:`Komutlar:
-• "Benim adım ..." → isim kaydeder
-• "7. sınıf konular"
-• "Konu anlat: Karışımlar"
-• "test: karışımlar" / "test: elektrik"
-• "cumhuriyet ne zaman ilan edildi"
-• "sağol / teşekkür" → özel cevap
-• bilmezsem Google butonu`, t:Date.now()});
-    conv.updatedAt = Date.now();
-    saveAll(); renderAll();
-  };
-  $("btnHelpM").onclick = $("btnHelpD").onclick;
-
-  $("btnTopicsD").onclick = () => {
-    const conv = getActive(); if(!conv) return;
-    conv.messages.push({who:"bot", text:listTopics(), t:Date.now()});
-    conv.updatedAt = Date.now();
-    saveAll(); renderAll();
-  };
-  $("btnTopicsM").onclick = $("btnTopicsD").onclick;
-
-  $("sbSearchD").addEventListener("input", () => renderChatList($("chatListD"), $("sbSearchD").value));
-  $("sbSearchM").addEventListener("input", () => renderChatList($("chatListM"), $("sbSearchM").value));
-
-  $("renameBtn").onclick = renameActiveChat;
-  $("clearBtn").onclick = clearActiveChat;
-
-  document.querySelectorAll("[data-q]").forEach(ch => {
-    ch.addEventListener("click", () => {
-      inp.value = ch.getAttribute("data-q");
-      autoResize(); inp.focus();
-      closeMobileMenu();
-    });
+/* ---------- UI / Menü ---------- */
+document.querySelectorAll(".pill").forEach(p=>{
+  p.addEventListener("click", ()=>{
+    document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+    p.classList.add("active");
+    state.tab = p.dataset.tab;
+    applyTab();
   });
+});
 
-  $("send").onclick = send;
-  inp.addEventListener("input", autoResize);
-  inp.addEventListener("keydown", (e)=>{
-    if(e.key==="Enter" && !e.shiftKey){
-      e.preventDefault();
-      send();
-    }
-  });
+function applyTab(){
+  if(state.tab==="chat"){
+    $modeBadge.textContent = "Mod: Sohbet";
+    $hintText.textContent = 'Örn: “Konu anlat: Karışımlar” • “test: elektrik devreleri” • “12 bölü 3”';
+    $subtitle.textContent = "Hızlı cevap • konu anlatımı • mini test";
+  } else if(state.tab==="ders"){
+    $modeBadge.textContent = "Mod: 7. Sınıf";
+    $hintText.textContent = 'Örn: “7. sınıf konular” • “Konu anlat: Karışımlar” • “test: karışımlar”';
+    $subtitle.textContent = "7. Sınıf destek • konu anlat • test";
+  } else if(state.tab==="tarih"){
+    $modeBadge.textContent = "Mod: Tarih";
+    $hintText.textContent = 'Örn: “Osmanlının 2. padişahı kim?” • “İstanbul’u kim fethetti?”';
+    $subtitle.textContent = "Tarih • Osmanlı • Cumhuriyet";
+  } else if(state.tab==="ayar"){
+    $modeBadge.textContent = "Mod: Ayar";
+    $hintText.textContent = 'Örn: “Benim adım ...” • “teşekkürler”';
+    $subtitle.textContent = "Kişisel ayarlar • isim hatırlama";
+    // ayar modunda küçük mesaj
+    addBotOnce("Ayarlar modu: İsmini kaydetmek için “Benim adım ...” yazabilirsin.");
+  }
+}
 
-  // Init
-  ensureOneConversation();
-  renderAll();
-  autoResize();
-})();
+let __botOnce = new Set();
+function addBotOnce(key){
+  if(__botOnce.has(key)) return;
+  __botOnce.add(key);
+  addMsg("bot", key);
+}
+
+/* ---------- Gönderme ---------- */
+function send(){
+  const text = $input.value.trim();
+  if(!text) return;
+  $input.value="";
+  addMsg("user", text);
+
+  showTyping();
+  setTimeout(()=>{
+    hideTyping();
+    const ans = answerFor(text);
+    addMsg("bot", ans);
+  }, 450);
+}
+
+$sendBtn.addEventListener("click", send);
+$input.addEventListener("keydown", (e)=>{
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    send();
+  }
+});
+
+/* ---------- Quick chips ---------- */
+quickPrompts.forEach(t=>{
+  const c = document.createElement("div");
+  c.className="chip";
+  c.textContent=t;
+  c.onclick=()=>{
+    $input.value=t;
+    $input.focus();
+  };
+  $quick.appendChild(c);
+});
+
+/* ---------- İlk mesaj ---------- */
+addMsg("bot",
+`Selam! Ben ZenoAI 🤝
+İstersen “Benim adım ...” yaz, adını hatırlayayım.
+Sorunu direkt yaz: fen / matematik / tarih / türkçe / din / ingilizce... elimden geldiğince cevaplarım.
+
+Örnek:
+- “7. sınıf konular”
+- “Konu anlat: Karışımlar”
+- “test: elektrik devreleri”
+- “12 bölü 3”`);
+applyTab();
 </script>
 </body>
 </html>
